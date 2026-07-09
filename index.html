@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedLink — سوق الخدمات الطبية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --indigo:#1A237E; --indigo-light:#3949AB; --indigo-pale:#E9EAF7; --indigo-pale-2:#F3F4FC;
+  --green:#34C759; --green-deep:#0E9F52; --teal:#12A6A0;
+  --bg:#F6F7FC; --surface:#FFFFFF; --ink:#0B0F2E; --ink-soft:#565C82; --ink-faint:#9296B8; --line:#E3E6F3;
+  --amber:#F0A83A; --danger:#E5484D;
+  --shadow-sm:0 2px 10px rgba(26,35,126,.07); --shadow-md:0 10px 32px rgba(26,35,126,.12); --shadow-lg:0 26px 64px rgba(26,35,126,.20);
+  --glass:rgba(255,255,255,.62);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{ font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--ink); line-height:1.6; min-height:100vh; overflow-x:hidden; }
+h1,h2,h3,h4,.display{ font-family:'Cairo',sans-serif; }
+.mono{ font-family:'JetBrains Mono',monospace; }
+img{max-width:100%; display:block;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; cursor:pointer; border:none; background:none;}
+input,select,textarea{font-family:inherit;}
+::selection{background:var(--green); color:#fff;}
+.wrap{max-width:1280px; margin:0 auto; padding:0 32px;}
+@media(max-width:640px){ .wrap{padding:0 18px;} }
+[dir="rtl"] .ltr-num{ direction:ltr; unicode-bidi:isolate; display:inline-block; }
+
+.aurora{ position:fixed; inset:0; z-index:-1; overflow:hidden; background:var(--bg); }
+.aurora span{ position:absolute; border-radius:50%; filter:blur(70px); opacity:.35; }
+.aurora span:nth-child(1){ width:520px; height:520px; background:var(--indigo); top:-180px; left:-120px; animation:drift1 22s ease-in-out infinite; }
+.aurora span:nth-child(2){ width:460px; height:460px; background:var(--green); top:20%; right:-160px; animation:drift2 26s ease-in-out infinite; }
+.aurora span:nth-child(3){ width:380px; height:380px; background:var(--teal); bottom:-140px; left:30%; animation:drift3 20s ease-in-out infinite; }
+@keyframes drift1{ 0%,100%{transform:translate(0,0);} 50%{transform:translate(80px,60px);} }
+@keyframes drift2{ 0%,100%{transform:translate(0,0);} 50%{transform:translate(-70px,50px);} }
+@keyframes drift3{ 0%,100%{transform:translate(0,0);} 50%{transform:translate(50px,-60px);} }
+
+.nav{ position:sticky; top:0; z-index:300; background:rgba(246,247,252,.78); backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }
+.nav-inner{ max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.nav-brand{ display:flex; align-items:center; gap:10px; cursor:pointer; }
+.nav-brand img{ height:34px; }
+.nav-links{ display:flex; gap:4px; align-items:center; }
+.nav-links a{ font-size:14px; font-weight:700; color:var(--ink-soft); padding:9px 14px; border-radius:99px; transition:.2s; white-space:nowrap; }
+.nav-links a:hover, .nav-links a.active{ background:var(--indigo-pale); color:var(--indigo); }
+.btn{ display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:99px; font-weight:800; font-size:13.5px; transition:.2s; white-space:nowrap; }
+.btn-primary{ background:var(--indigo); color:#fff; box-shadow:0 8px 20px rgba(26,35,126,.28); }
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(26,35,126,.34); }
+.btn-green{ background:var(--green); color:#053018; box-shadow:0 8px 20px rgba(52,199,89,.30); }
+.btn-green:hover{ transform:translateY(-2px); }
+.btn-ghost{ border:1.5px solid var(--line); color:var(--ink); background:var(--surface); }
+.btn-ghost:hover{ border-color:var(--indigo); color:var(--indigo); }
+.btn-danger{ background:#FDEBEC; color:var(--danger); }
+.btn-block{ width:100%; justify-content:center; }
+.btn-sm{ padding:8px 15px; font-size:12.5px; }
+.btn:disabled{ opacity:.5; cursor:not-allowed; transform:none !important; }
+.nav-right{ display:flex; align-items:center; gap:10px; }
+@media(max-width:1024px){ .nav-links{display:none;} }
+
+.lang-switch{ position:relative; }
+.lang-btn{ display:flex; align-items:center; gap:6px; background:var(--surface); border:1.5px solid var(--line); border-radius:99px; padding:8px 13px; font-size:12.5px; font-weight:800; color:var(--ink-soft); }
+.lang-menu{ position:absolute; top:110%; inset-inline-end:0; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg); padding:6px; width:170px; max-height:320px; overflow-y:auto; display:none; z-index:400; }
+.lang-menu.open{ display:block; }
+.lang-menu button{ width:100%; text-align:start; padding:9px 12px; border-radius:9px; font-size:13px; font-weight:700; display:flex; justify-content:space-between; }
+.lang-menu button:hover{ background:var(--indigo-pale); color:var(--indigo); }
+.lang-menu button.active{ color:var(--green-deep); }
+
+.user-chip{ display:flex; align-items:center; gap:8px; background:var(--surface); border:1.5px solid var(--line); border-radius:99px; padding:6px 8px 6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+[dir="rtl"] .user-chip{ padding:6px 14px 6px 8px; }
+.user-chip .av{ width:26px; height:26px; border-radius:50%; background:var(--indigo); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; }
+.user-menu{ position:absolute; top:110%; inset-inline-end:0; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg); padding:6px; width:190px; display:none; z-index:400; }
+.user-menu.open{ display:block; }
+.user-menu a, .user-menu button{ display:block; width:100%; text-align:start; padding:10px 12px; border-radius:9px; font-size:13px; font-weight:700; }
+.user-menu a:hover, .user-menu button:hover{ background:var(--indigo-pale); color:var(--indigo); }
+
+.view{ display:none; animation:viewIn .45s ease; }
+.view.active{ display:block; }
+@keyframes viewIn{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;} }
+section{ padding:64px 0; }
+.section-head{ max-width:660px; margin-bottom:38px; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; background:var(--indigo-pale); color:var(--indigo); font-weight:800; font-size:12.5px; padding:7px 14px; border-radius:99px; margin-bottom:16px; }
+.eyebrow .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 4px rgba(52,199,89,.22); animation:pulseDot 1.8s infinite; }
+@keyframes pulseDot{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+.section-head h2{ font-size:clamp(24px,3vw,34px); font-weight:900; }
+.section-head p{ color:var(--ink-soft); margin-top:10px; font-size:15.5px; }
+.section-alt{ background:rgba(255,255,255,.5); border-top:1px solid var(--line); border-bottom:1px solid var(--line); backdrop-filter:blur(6px); }
+
+.hero{ padding:64px 0 20px; }
+.hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:50px; align-items:center; }
+@media(max-width:960px){ .hero-grid{grid-template-columns:1fr;} }
+.hero h1{ font-size:clamp(30px,4.4vw,50px); font-weight:900; line-height:1.2; letter-spacing:-.01em; }
+.hero h1 .a1{ color:var(--indigo); } .hero h1 .a2{ color:var(--green-deep); }
+.hero p.lead{ margin-top:18px; font-size:17px; color:var(--ink-soft); max-width:54ch; }
+.hero-ctas{ display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; }
+.hero-stats{ display:flex; gap:26px; margin-top:34px; flex-wrap:wrap; }
+.stat b{ display:block; font-family:'Cairo',sans-serif; font-size:24px; font-weight:900; color:var(--indigo); }
+.stat span{ font-size:12.5px; color:var(--ink-faint); font-weight:700; }
+.logo-stage{ position:relative; max-width:400px; margin:0 auto; aspect-ratio:1/1; background:radial-gradient(circle at 50% 40%, #fff 0%, var(--indigo-pale-2) 70%, transparent 100%); border-radius:32px; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-lg); }
+.logo-stage img{ width:76%; filter:drop-shadow(0 20px 40px rgba(26,35,126,.18)); animation:floatY 5s ease-in-out infinite; }
+@keyframes floatY{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+.stage-badge{ position:absolute; bottom:16px; inset-inline-start:16px; background:var(--ink); color:#fff; font-size:11.5px; font-weight:700; padding:8px 13px; border-radius:99px; display:flex; align-items:center; gap:7px; box-shadow:var(--shadow-md); }
+.stage-badge .dot{ width:7px; height:7px; border-radius:50%; background:#4ADE80; animation:pulseDot 1.6s infinite; }
+
+.marquee{ overflow:hidden; margin-top:16px; }
+.marquee-track{ display:flex; gap:44px; width:max-content; animation:scrollX 26s linear infinite; align-items:center; }
+@keyframes scrollX{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+.marquee-item{ font-weight:800; color:var(--ink-faint); font-size:14px; display:flex; align-items:center; gap:8px; opacity:.8; }
+.marquee-item .sq{ width:8px; height:8px; border-radius:3px; background:var(--indigo); }
+
+.grid-3{ display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:18px; }
+.gcard{ background:var(--glass); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.6); border-radius:18px; padding:18px; box-shadow:var(--shadow-sm); transition:.25s; }
+.gcard:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); }
+
+.toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:13px; box-shadow:var(--shadow-sm); }
+.search-box{ display:flex; align-items:center; gap:8px; background:var(--bg); border-radius:12px; padding:9px 14px; flex:1; min-width:170px; }
+.search-box input{ border:none; background:none; outline:none; font-size:13.5px; width:100%; color:var(--ink); }
+.filter-select{ border:1px solid var(--line); background:var(--bg); border-radius:12px; padding:9px 11px; font-size:13px; font-weight:700; color:var(--ink-soft); outline:none; }
+
+.staff-card{ position:relative; overflow:hidden; }
+.staff-top{ display:flex; align-items:center; gap:12px; }
+.avatar{ width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-family:'Cairo',sans-serif; font-weight:800; color:#fff; font-size:15px; flex-shrink:0; }
+.staff-name{ font-weight:800; font-size:14.5px; }
+.staff-role{ font-size:12px; color:var(--ink-faint); font-weight:700; margin-top:2px; }
+.staff-bio{ font-size:12.5px; color:var(--ink-soft); margin-top:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.tag-row{ display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.tag{ background:var(--bg); border-radius:8px; padding:4px 9px; font-size:11px; font-weight:700; color:var(--ink-soft); }
+.badge-verified{ display:inline-flex; align-items:center; gap:5px; background:#E7F9EE; color:var(--green-deep); font-size:10.5px; font-weight:800; padding:4px 9px; border-radius:99px; }
+.badge-unverified{ display:inline-flex; align-items:center; gap:5px; background:#F1F2F8; color:var(--ink-faint); font-size:10.5px; font-weight:800; padding:4px 9px; border-radius:99px; }
+.locked-block{ margin-top:14px; background:var(--bg); border-radius:12px; padding:12px; }
+.locked-block.revealed{ background:#E7F9EE; }
+.staff-actions{ margin-top:14px; display:flex; gap:8px; }
+
+.profile-hero{ display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:26px; box-shadow:var(--shadow-sm); }
+.profile-avatar{ width:78px; height:78px; border-radius:22px; display:flex; align-items:center; justify-content:center; font-family:'Cairo',sans-serif; font-weight:900; font-size:26px; color:#fff; flex-shrink:0; }
+
+.rfq-list{ display:flex; flex-direction:column; gap:14px; }
+.rfq-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px 20px; box-shadow:var(--shadow-sm); border-inline-start:4px solid var(--indigo); }
+.rfq-card.type-staff{ border-inline-start-color:var(--teal); }
+.rfq-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; }
+.rfq-title{ font-weight:800; font-size:15px; }
+.rfq-sub{ font-size:12px; color:var(--ink-faint); margin-top:4px; font-weight:700; }
+.rfq-badge{ font-size:10.5px; font-weight:800; padding:5px 10px; border-radius:99px; white-space:nowrap; }
+.rfq-badge.staff{ background:#E6F7F6; color:var(--teal); }
+.rfq-badge.supply{ background:var(--indigo-pale); color:var(--indigo); }
+.rfq-desc{ font-size:13px; color:var(--ink-soft); margin-top:10px; }
+.rfq-meta{ display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; font-size:12px; color:var(--ink-faint); font-weight:700; }
+
+.card-form{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:28px; box-shadow:var(--shadow-sm); max-width:560px; }
+.card-form.wide{ max-width:760px; }
+.field{ margin-bottom:15px; }
+.field label{ display:block; font-size:12.5px; font-weight:800; color:var(--ink-soft); margin-bottom:6px; }
+.field input, .field select, .field textarea{ width:100%; border:1.5px solid var(--line); border-radius:12px; padding:11px 13px; font-size:13.5px; outline:none; background:var(--bg); color:var(--ink); transition:.2s; }
+.field textarea{ resize:vertical; min-height:80px; }
+.field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--indigo); background:#fff; }
+.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media(max-width:520px){ .field-row{grid-template-columns:1fr;} }
+.role-tabs{ display:flex; gap:8px; margin-bottom:22px; background:var(--bg); padding:6px; border-radius:14px; }
+.role-tabs button{ flex:1; padding:11px; border-radius:10px; font-weight:800; font-size:13px; color:var(--ink-soft); }
+.role-tabs button.active{ background:var(--surface); color:var(--indigo); box-shadow:var(--shadow-sm); }
+.branch-row{ display:flex; gap:8px; margin-bottom:8px; }
+.branch-row input{ flex:1; }
+.small-x{ width:38px; height:38px; border-radius:10px; background:#FDEBEC; color:var(--danger); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.link-inline{ color:var(--indigo); font-weight:800; text-decoration:underline; }
+
+.verify-box{ max-width:560px; margin:0 auto; background:var(--surface); border:1px solid var(--line); border-radius:22px; padding:32px; text-align:center; box-shadow:var(--shadow-md); }
+.verify-box .icon-circle{ width:64px; height:64px; border-radius:50%; background:var(--indigo-pale); color:var(--indigo); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; }
+.iban-box{ background:var(--bg); border-radius:14px; padding:16px; margin:18px 0; text-align:start; }
+.iban-box .row{ display:flex; justify-content:space-between; padding:7px 0; font-size:13px; border-bottom:1px dashed var(--line); }
+.iban-box .row:last-child{ border-bottom:none; }
+.iban-box .row b{ font-family:'JetBrains Mono',monospace; direction:ltr; }
+
+.dash-grid{ display:grid; grid-template-columns:220px 1fr; gap:24px; align-items:start; }
+@media(max-width:820px){ .dash-grid{grid-template-columns:1fr;} }
+.dash-side{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:14px; box-shadow:var(--shadow-sm); position:sticky; top:90px; }
+.dash-side button{ display:block; width:100%; text-align:start; padding:11px 13px; border-radius:11px; font-size:13.5px; font-weight:800; color:var(--ink-soft); margin-bottom:4px; }
+.dash-side button:hover{ background:var(--indigo-pale); color:var(--indigo); }
+.dash-side button.active{ background:var(--indigo); color:#fff; }
+.stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:24px; }
+.stat-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px; box-shadow:var(--shadow-sm); }
+.stat-card b{ display:block; font-family:'Cairo',sans-serif; font-size:26px; font-weight:900; color:var(--indigo); }
+.stat-card span{ font-size:12px; color:var(--ink-faint); font-weight:700; }
+.notif-row{ display:flex; justify-content:space-between; align-items:center; padding:13px 0; border-bottom:1px dashed var(--line); gap:10px; flex-wrap:wrap; }
+.notif-row:last-child{ border-bottom:none; }
+.notif-left{ display:flex; align-items:center; gap:10px; }
+.notif-left .ic{ width:36px; height:36px; border-radius:10px; background:var(--indigo-pale); color:var(--indigo); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.notif-time{ font-size:11.5px; color:var(--ink-faint); font-weight:700; }
+
+.table-wrap{ overflow-x:auto; background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow-sm); }
+table{ width:100%; border-collapse:collapse; font-size:13px; min-width:640px; }
+th{ text-align:start; padding:12px 14px; background:var(--bg); color:var(--ink-faint); font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; }
+td{ padding:12px 14px; border-top:1px solid var(--line); vertical-align:middle; white-space:nowrap; }
+tr:hover td{ background:var(--indigo-pale-2); }
+.pill{ font-size:11px; font-weight:800; padding:4px 10px; border-radius:99px; }
+.pill.ok{ background:#E7F9EE; color:var(--green-deep); }
+.pill.wait{ background:#FEF3E1; color:#B36B0A; }
+.pill.no{ background:#F1F2F8; color:var(--ink-faint); }
+.admin-tabs{ display:flex; gap:6px; margin-bottom:22px; flex-wrap:wrap; background:var(--surface); padding:6px; border-radius:14px; border:1px solid var(--line); }
+.admin-tabs button{ padding:10px 16px; border-radius:10px; font-weight:800; font-size:12.5px; color:var(--ink-soft); }
+.admin-tabs button.active{ background:var(--indigo); color:#fff; }
+.settings-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+.settings-item{ display:flex; align-items:center; gap:10px; background:var(--bg); border-radius:12px; padding:10px 12px; }
+.settings-item span{ flex:1; font-size:13px; font-weight:700; }
+
+.modal-overlay{ position:fixed; inset:0; background:rgba(11,15,46,.5); backdrop-filter:blur(3px); z-index:900; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:.25s; }
+.modal-overlay.show{ opacity:1; pointer-events:auto; }
+.modal{ background:var(--surface); border-radius:20px; padding:26px; width:100%; max-width:440px; box-shadow:var(--shadow-lg); transform:translateY(16px) scale(.97); transition:.28s; max-height:88vh; overflow-y:auto; }
+.modal-overlay.show .modal{ transform:none; }
+.modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.modal-head h3{ font-size:17px; font-weight:800; }
+.modal-close{ width:32px; height:32px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+.toast{ position:fixed; bottom:24px; inset-inline-end:24px; z-index:999; background:var(--ink); color:#fff; padding:13px 20px; border-radius:12px; font-size:13px; font-weight:700; box-shadow:var(--shadow-lg); display:flex; align-items:center; gap:10px; transform:translateY(20px); opacity:0; transition:.35s; pointer-events:none; max-width:320px; }
+.toast.show{ transform:translateY(0); opacity:1; }
+.toast .dot{ width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0; }
+
+footer{ padding:44px 0 26px; border-top:1px solid var(--line); }
+.footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:30px; margin-bottom:30px; }
+@media(max-width:760px){ .footer-grid{grid-template-columns:1fr;} }
+.footer-brand{ display:flex; align-items:center; gap:10px; font-weight:800; margin-bottom:10px; }
+.footer-brand img{ height:28px; }
+footer h5{ font-size:13px; font-weight:800; margin-bottom:12px; color:var(--ink-soft); }
+footer .flinks a{ display:block; font-size:13px; color:var(--ink-soft); padding:5px 0; }
+footer .flinks a:hover{ color:var(--indigo); }
+.social-row{ display:flex; gap:8px; margin-top:10px; }
+.social-row a{ width:34px; height:34px; border-radius:10px; background:var(--indigo-pale); color:var(--indigo); display:flex; align-items:center; justify-content:center; }
+.footer-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:20px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-faint); }
+.admin-link{ font-weight:700; color:var(--ink-faint); }
+.empty-note{ font-size:13px; color:var(--ink-faint); text-align:center; padding:26px 0; }
+
+.reveal{ opacity:0; transform:translateY(16px); transition:.6s; }
+.reveal.in{ opacity:1; transform:none; }
+.spinner{ display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="aurora"><span></span><span></span><span></span></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand" onclick="go('home')"><img src="assets/logo.png" alt="MedLink"></div>
+    <div class="nav-links">
+      <a href="#" onclick="go('home');return false" data-i18n="nav_home">الرئيسية</a>
+      <a href="#" onclick="go('staffDirectory');return false" data-i18n="nav_staff">الكوادر الطبية</a>
+      <a href="#" onclick="go('rfqFeed');return false" data-i18n="nav_rfq">المناقصات</a>
+      <a href="#" onclick="go('suppliers');return false" data-i18n="nav_suppliers">الموردون</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button class="lang-btn" onclick="toggleLangMenu()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+          <span id="langLabel">AR</span>
+        </button>
+        <div class="lang-menu" id="langMenu"></div>
+      </div>
+      <div id="navAuthArea"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HOME ============ -->
+<section class="view active" id="view-home" data-view>
+ <header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span><span data-i18n="hero_eyebrow">سوق طبي حي متصل بشبكتك</span></div>
+      <h1><span class="a1" data-i18n="hero_title_a">سوق طبي واحد</span> <span data-i18n="hero_title_b">لتوظيف الكوادر وإدارة المناقصات</span></h1>
+      <p class="lead" data-i18n="hero_lead">MedLink تربط المنشآت الصحية بالكوادر الطبية المؤهلة، وتدير مناقصات الأجهزة والخدمات مع الموردين — بخصوصية كاملة وتوثيق موثوق لكل طرف.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary" onclick="go('staffDirectory')" data-i18n="hero_cta1">استعرض الكوادر الطبية</button>
+        <button class="btn btn-ghost" onclick="go('rfqFeed')" data-i18n="hero_cta2">تصفح المناقصات</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b id="statStaffCount">—</b><span data-i18n="hero_stat_staff">كادر طبي مسجّل</span></div>
+        <div class="stat"><b id="statRfqCount">—</b><span data-i18n="hero_stat_rfq">مناقصة منشورة</span></div>
+        <div class="stat"><b id="statSupplierCount">—</b><span data-i18n="hero_stat_suppliers">مورّد معتمد</span></div>
+      </div>
+    </div>
+    <div class="logo-stage">
+      <img src="assets/logo.png" alt="MedLink">
+      <div class="stage-badge"><span class="dot"></span><span data-i18n="hero_badge">مزامنة حية عبر Supabase</span></div>
+    </div>
+  </div>
+ </header>
+
+ <section>
+  <div class="wrap">
+   <div class="section-head reveal">
+     <div class="eyebrow" data-i18n="home_rfq_eyebrow">أحدث الفرص</div>
+     <h2 data-i18n="home_rfq_title">مناقصات منشورة الآن</h2>
+     <p data-i18n="home_rfq_sub">فرص توظيف ومناقصات مستلزمات — منشورة بعد مراجعة فريق MedLink.</p>
+   </div>
+   <div id="homeRfqStrip" class="grid-3 reveal"><div class="empty-note">…</div></div>
+  </div>
+ </section>
+
+ <section class="section-alt">
+  <div class="wrap">
+   <div class="section-head reveal">
+     <div class="eyebrow" data-i18n="home_staff_eyebrow">كوادر مميزة</div>
+     <h2 data-i18n="home_staff_title">تصفح نخبة من الكوادر الطبية</h2>
+     <p data-i18n="home_staff_sub">الأسماء وأرقام التواصل محمية — تظهر فقط للمنشآت الموثّقة عبر المنصة.</p>
+   </div>
+   <div id="homeStaffStrip" class="grid-3 reveal"><div class="empty-note">…</div></div>
+  </div>
+ </section>
+
+ <section>
+   <div class="wrap" style="text-align:center;">
+     <div class="eyebrow" style="margin:0 auto 14px;" data-i18n="home_partners_eyebrow">شركاء النجاح</div>
+     <div class="marquee"><div class="marquee-track" id="partnersMarquee"></div></div>
+   </div>
+ </section>
+</section>
+
+<!-- ============ LOGIN ============ -->
+<section class="view" id="view-login" data-view>
+  <div class="wrap" style="padding:50px 0; display:flex; justify-content:center;">
+    <div class="card-form">
+      <h2 style="margin-bottom:6px;" data-i18n="login_title">تسجيل الدخول</h2>
+      <p style="color:var(--ink-soft); font-size:13.5px; margin-bottom:22px;" data-i18n="login_sub">ادخل لحسابك كمنشأة، كادر طبي، أو مورد.</p>
+      <form onsubmit="doLogin(event)">
+        <div class="field"><label data-i18n="field_email">البريد الإلكتروني</label><input required type="email" id="loginEmail" placeholder="you@example.com"></div>
+        <div class="field"><label data-i18n="field_password">كلمة المرور</label><input required type="password" id="loginPassword" placeholder="••••••••"></div>
+        <button class="btn btn-primary btn-block" type="submit" id="loginSubmitBtn" data-i18n="login_submit">دخول</button>
+      </form>
+      <p style="margin-top:16px; font-size:13px; color:var(--ink-soft); text-align:center;">
+        <span data-i18n="login_no_account">ليس لديك حساب؟</span>
+        <a href="#" class="link-inline" onclick="go('register');return false" data-i18n="nav_register">إنشاء حساب</a>
+      </p>
+      <div style="margin-top:18px; background:var(--bg); border-radius:12px; padding:12px; font-size:11.5px; color:var(--ink-faint);">
+        بيانات تجريبية: <b class="ltr-num">hospital1@demo.com</b> / <b class="ltr-num">demo123</b> (منشأة موثقة) — <b class="ltr-num">staff1@demo.com</b> / <b class="ltr-num">demo123</b> (كادر) — <b class="ltr-num">supplier1@demo.com</b> / <b class="ltr-num">demo123</b> (مورد)
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REGISTER ============ -->
+<section class="view" id="view-register" data-view>
+  <div class="wrap" style="padding:50px 0; display:flex; justify-content:center;">
+    <div class="card-form wide">
+      <h2 style="margin-bottom:6px;" data-i18n="register_title">إنشاء حساب جديد</h2>
+      <p style="color:var(--ink-soft); font-size:13.5px; margin-bottom:20px;" data-i18n="register_sub">اختر نوع الحساب المناسب لك.</p>
+      <div class="role-tabs">
+        <button class="active" id="tabClient" onclick="setRegRole('client')" data-i18n="register_role_client">منشأة / عميل</button>
+        <button id="tabStaff" onclick="setRegRole('staff')" data-i18n="register_role_staff">كادر طبي</button>
+        <button id="tabSupplier" onclick="setRegRole('supplier')" data-i18n="register_role_supplier">مورّد</button>
+      </div>
+
+      <form id="registerForm" onsubmit="submitRegister(event)">
+        <div id="fieldsClient">
+          <div class="field-row">
+            <div class="field"><label data-i18n="field_orgname">اسم الجهة</label><input id="regOrgName" type="text" placeholder="مستشفى / مستوصف / عيادة"></div>
+            <div class="field"><label data-i18n="field_orgtype">نوع الجهة</label>
+              <select id="regOrgType">
+                <option data-i18n="orgtype_hospital">مستشفى</option><option data-i18n="orgtype_clinic">مستوصف/عيادة</option><option data-i18n="orgtype_center">مركز رعاية</option><option data-i18n="orgtype_other">أخرى</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label data-i18n="field_city">المدينة</label><select id="regCity"></select></div>
+          <div class="field"><label data-i18n="field_branches">الفروع (اختياري)</label><div id="branchList"></div>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="addBranchRow()" data-i18n="field_add_branch">+ إضافة فرع</button>
+          </div>
+        </div>
+
+        <div id="fieldsStaff" style="display:none;">
+          <div class="field"><label data-i18n="field_fullname">الاسم الكامل (لن يظهر للعامة)</label><input id="regFullName" type="text" placeholder="د. فلان الفلاني"></div>
+          <div class="field-row">
+            <div class="field"><label data-i18n="field_phone">رقم الجوال (لن يظهر للعامة)</label><input id="regPhone" type="tel" placeholder="05xxxxxxxx"></div>
+            <div class="field"><label data-i18n="field_gender">الجنس</label>
+              <select id="regGender"><option data-i18n="gender_m">ذكر</option><option data-i18n="gender_f">أنثى</option></select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label data-i18n="field_specialty">التخصص</label><select id="regSpecialty"></select></div>
+            <div class="field"><label data-i18n="field_nationality">الجنسية</label><select id="regNationality"></select></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label data-i18n="field_city">المدينة</label><select id="regCity2"></select></div>
+            <div class="field"><label data-i18n="field_experience">سنوات الخبرة</label><input id="regExperience" type="number" min="0" placeholder="5"></div>
+          </div>
+          <div class="field"><label data-i18n="field_bio">نبذة تعريفية (تظهر للعامة)</label><textarea id="regBio" placeholder="اكتب نبذة مختصرة عن خبراتك ومجالات اهتمامك..."></textarea></div>
+        </div>
+
+        <div id="fieldsSupplier" style="display:none;">
+          <div class="field"><label data-i18n="field_company">اسم الشركة</label><input id="regCompany" type="text" placeholder="اسم شركتك"></div>
+          <div class="field"><label data-i18n="field_category">فئة النشاط</label>
+            <select id="regCategory">
+              <option data-i18n="cat_equipment">أجهزة ومستلزمات طبية</option>
+              <option data-i18n="cat_om">تشغيل وصيانة (O&M)</option>
+              <option data-i18n="cat_construction">مقاولات ومشاريع صحية</option>
+              <option data-i18n="cat_it">حلول تقنية صحية</option>
+              <option data-i18n="cat_other">أخرى</option>
+            </select>
+          </div>
+          <div class="field"><label data-i18n="field_services">وصف الخدمات/المنتجات</label><textarea id="regServices" placeholder="صف نشاطك التجاري باختصار..."></textarea></div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label data-i18n="field_email">البريد الإلكتروني</label><input required id="regEmail" type="email" placeholder="you@example.com"></div>
+          <div class="field"><label data-i18n="field_password">كلمة المرور (٦ أحرف على الأقل)</label><input required id="regPassword" type="password" minlength="6" placeholder="••••••••"></div>
+        </div>
+        <button class="btn btn-green btn-block" type="submit" id="registerSubmitBtn" data-i18n="register_submit">إنشاء الحساب</button>
+      </form>
+      <p style="margin-top:16px; font-size:13px; color:var(--ink-soft); text-align:center;">
+        <span data-i18n="register_have_account">لديك حساب؟</span>
+        <a href="#" class="link-inline" onclick="go('login');return false" data-i18n="nav_login">دخول</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VERIFY PENDING ============ -->
+<section class="view" id="view-verifyPending" data-view>
+  <div class="wrap" style="padding:60px 0;">
+    <div class="verify-box">
+      <div class="icon-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+      <h2 data-i18n="verify_pending_title">حسابك قيد التفعيل</h2>
+      <p style="color:var(--ink-soft); margin-top:8px; font-size:14px;" data-i18n="verify_pending_note">حوّل رسوم الاشتراك عبر الآيبان أدناه، ثم أرسل نسخة من إيصال التحويل إلى بريد التفعيل مع اسم جهتك، وسنفعّل حسابك خلال وقت قصير.</p>
+      <div class="iban-box">
+        <div class="row"><span data-i18n="iban_beneficiary">المستفيد</span><b>MedLink Holding Co.</b></div>
+        <div class="row"><span data-i18n="iban_number">رقم الآيبان</span><b class="ltr-num">SA03 8000 0000 6080 1016 7519</b></div>
+        <div class="row"><span data-i18n="iban_bank">البنك</span><b>Al Rajhi Bank</b></div>
+        <div class="row"><span data-i18n="iban_email">إرسال الإيصال إلى</span><b>payments@medlink.sa</b></div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="markTransferred()" data-i18n="btn_mark_transferred">تم التحويل، أخطر الإدارة</button>
+      <p style="margin-top:14px; font-size:12px; color:var(--ink-faint);" data-i18n="verify_pending_admin_note">سيقوم فريقنا بمراجعة التحويل وتفعيل صلاحياتك الكاملة من لوحة التحكم.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAFF DIRECTORY ============ -->
+<section class="view" id="view-staffDirectory" data-view>
+  <div class="wrap" style="padding-top:44px;">
+    <div class="section-head reveal">
+      <div class="eyebrow" data-i18n="section_staff_eyebrow">Talent Hub</div>
+      <h2 data-i18n="section_staff_title">دليل الكوادر الطبية</h2>
+      <p data-i18n="section_staff_sub">تصفح الملفات التعريفية — الأسماء وأرقام التواصل محمية حتى تفعيل صلاحية منشأتك.</p>
+    </div>
+    <div class="toolbar reveal">
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="staffSearch" type="text" data-i18n-placeholder="search_placeholder" placeholder="ابحث بالتخصص أو النبذة...">
+      </div>
+      <select id="fSpecialty" class="filter-select"></select>
+      <select id="fNationality" class="filter-select"></select>
+      <select id="fCity" class="filter-select"></select>
+    </div>
+    <div id="staffGrid" class="grid-3 reveal"><div class="empty-note">…</div></div>
+  </div>
+</section>
+
+<!-- ============ STAFF PROFILE ============ -->
+<section class="view" id="view-staffProfile" data-view>
+  <div class="wrap" style="padding-top:44px; max-width:760px; margin:0 auto;">
+    <div id="staffProfileBody"></div>
+  </div>
+</section>
+
+<!-- ============ RFQ FEED ============ -->
+<section class="view" id="view-rfqFeed" data-view>
+  <div class="wrap" style="padding-top:44px;">
+    <div class="section-head reveal">
+      <div class="eyebrow" data-i18n="section_rfq_eyebrow">RFQ Engine</div>
+      <h2 data-i18n="section_rfq_title">المناقصات المنشورة</h2>
+      <p data-i18n="section_rfq_sub">طلبات توظيف كوادر ومناقصات مستلزمات طبية — تُنشر بعد مراجعة والتحقق من فريق MedLink.</p>
+    </div>
+    <div class="toolbar reveal">
+      <select id="fRfqType" class="filter-select">
+        <option value="" data-i18n="filter_all">كل الأنواع</option>
+        <option value="staff" data-i18n="rfq_type_staff">بحث عن كوادر</option>
+        <option value="supply" data-i18n="rfq_type_supply">مستلزمات وموردين</option>
+      </select>
+      <div style="flex:1;"></div>
+      <button class="btn btn-primary btn-sm" onclick="go('rfqNew')" data-i18n="btn_new_rfq">+ طلب مناقصة جديد</button>
+    </div>
+    <div id="rfqFeedList" class="rfq-list reveal"><div class="empty-note">…</div></div>
+  </div>
+</section>
+
+<!-- ============ NEW RFQ ============ -->
+<section class="view" id="view-rfqNew" data-view>
+  <div class="wrap" style="padding:44px 0; display:flex; justify-content:center;">
+    <div id="rfqNewBody" class="card-form wide"></div>
+  </div>
+</section>
+
+<!-- ============ SUPPLIERS ============ -->
+<section class="view" id="view-suppliers" data-view>
+  <div class="wrap" style="padding-top:44px;">
+    <div class="section-head reveal">
+      <div class="eyebrow" data-i18n="section_suppliers_eyebrow">Suppliers Marketplace</div>
+      <h2 data-i18n="section_suppliers_title">الموردون المعتمدون</h2>
+      <p data-i18n="section_suppliers_sub">شركات معدات، تشغيل وصيانة، ومقاولات صحية — مدرجة رسميًا في سوق MedLink.</p>
+    </div>
+    <div style="margin-bottom:20px;">
+      <button class="btn btn-primary" onclick="go('register'); setRegRole('supplier');" data-i18n="btn_become_supplier">سجّل كمورد في المنصة</button>
+    </div>
+    <div id="suppliersGrid" class="grid-3 reveal"><div class="empty-note">…</div></div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section class="view" id="view-dashboard" data-view>
+  <div class="wrap" style="padding:44px 0;">
+    <div class="dash-grid">
+      <div class="dash-side" id="dashSide"></div>
+      <div id="dashBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADMIN LOGIN ============ -->
+<section class="view" id="view-adminLogin" data-view>
+  <div class="wrap" style="padding:70px 0; display:flex; justify-content:center;">
+    <div class="card-form">
+      <h2 style="margin-bottom:6px;">دخول الإدارة</h2>
+      <p style="color:var(--ink-soft); font-size:13px; margin-bottom:20px;">لوحة تحكم فريق MedLink فقط.</p>
+      <form onsubmit="doAdminLogin(event)">
+        <div class="field"><label>البريد الإلكتروني</label><input required id="adminUser" type="email" placeholder="admin@medlink.sa"></div>
+        <div class="field"><label>كلمة المرور</label><input required id="adminPass" type="password" placeholder="••••••••"></div>
+        <button class="btn btn-primary btn-block" type="submit" id="adminSubmitBtn">دخول لوحة التحكم</button>
+      </form>
+      <div style="margin-top:16px; background:var(--bg); border-radius:12px; padding:12px; font-size:11.5px; color:var(--ink-faint);">
+        بيانات تجريبية: <b class="ltr-num">admin@medlink.sa</b> / <b class="ltr-num">MedLinkAdmin2026!</b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADMIN PANEL ============ -->
+<section class="view" id="view-admin" data-view>
+  <div class="wrap" style="padding:36px 0;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+      <h2 style="font-size:22px;">لوحة تحكم الإدارة</h2>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">تسجيل خروج الإدارة</button>
+    </div>
+    <div class="admin-tabs" id="adminTabs"></div>
+    <div id="adminBody"></div>
+  </div>
+</section>
+
+<div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand"><img src="assets/logo.png" alt="MedLink"> MedLink</div>
+        <p style="font-size:13px; color:var(--ink-soft); max-width:34ch;" data-i18n="footer_about">سوق طبي يربط المنشآت الصحية بالكوادر والموردين بخصوصية وثقة كاملة.</p>
+        <div class="social-row" id="socialRow"></div>
+      </div>
+      <div>
+        <h5 data-i18n="footer_platform">المنصة</h5>
+        <div class="flinks">
+          <a href="#" onclick="go('staffDirectory');return false" data-i18n="nav_staff">الكوادر الطبية</a>
+          <a href="#" onclick="go('rfqFeed');return false" data-i18n="nav_rfq">المناقصات</a>
+          <a href="#" onclick="go('suppliers');return false" data-i18n="nav_suppliers">الموردون</a>
+        </div>
+      </div>
+      <div>
+        <h5 data-i18n="footer_contact">تواصل معنا</h5>
+        <div class="flinks" id="footerContactInfo"></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="footer_rights">© 2026 MedLink. جميع الحقوق محفوظة.</span>
+      <a href="#" class="admin-link" onclick="go('adminLogin');return false">دخول الإدارة</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ==========================================================================
+   SUPABASE CLIENT
+========================================================================== */
+const SUPABASE_URL = 'https://aizxzrozfwyaooogmnaj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpenh6cm96Znd5YW9vb2dtbmFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTQzMDEsImV4cCI6MjA5OTE5MDMwMX0.JAjqJ0OfuHZZxfT0tbAjdfkwA8I7Rm87yezc4uUaAQA';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ==========================================================================
+   LANGUAGES + I18N  (unchanged UI chrome dictionary)
+========================================================================== */
+const LANGS = ['ar','en','ru','de','ja','ko','zh','es','it','pt','fr','ur'];
+const LANG_NAMES = {ar:'العربية',en:'English',ru:'Русский',de:'Deutsch',ja:'日本語',ko:'한국어',zh:'中文',es:'Español',it:'Italiano',pt:'Português',fr:'Français',ur:'اردو'};
+const RTL_LANGS = ['ar','ur'];
+let currentLang = localStorage.getItem('ml_lang') || 'ar';
+
+const TR = {
+ nav_home:['الرئيسية','Home','Главная','Startseite','ホーム','홈','首页','Inicio','Home','Início','Accueil','ہوم'],
+ nav_staff:['الكوادر الطبية','Medical Staff','Медперсонал','Fachkräfte','医療スタッフ','의료진','医护人员','Personal médico','Personale medico','Equipe médica','Personnel médical','طبی عملہ'],
+ nav_rfq:['المناقصات','RFQs','Заявки','Anfragen','見積依頼','견적요청','招标','Solicitudes','Richieste','Cotações','Appels d\'offres','درخواستیں'],
+ nav_suppliers:['الموردون','Suppliers','Поставщики','Lieferanten','サプライヤー','공급업체','供应商','Proveedores','Fornitori','Fornecedores','Fournisseurs','سپلائرز'],
+ nav_login:['دخول','Log in','Вход','Anmelden','ログイン','로그인','登录','Iniciar sesión','Accedi','Entrar','Connexion','لاگ ان'],
+ nav_register:['إنشاء حساب','Sign up','Регистрация','Registrieren','新規登録','회원가입','注册','Registrarse','Registrati','Cadastrar','S\'inscrire','رجسٹر کریں'],
+ nav_dashboard:['لوحتي','Dashboard','Панель','Dashboard','ダッシュボード','대시보드','控制面板','Panel','Pannello','Painel','Tableau de bord','ڈیش بورڈ'],
+ nav_logout:['خروج','Log out','Выйти','Abmelden','ログアウト','로그아웃','退出','Salir','Esci','Sair','Déconnexion','لاگ آؤٹ'],
+ hero_eyebrow:['سوق طبي حي متصل بشبكتك','A live medical marketplace','Живой медицинский маркетплейс','Ein lebendiger Medizinmarktplatz','ライブ医療マーケットプレイス','실시간 의료 마켓플레이스','实时医疗市场平台','Un mercado médico en vivo','Un marketplace medico live','Um marketplace médico ao vivo','Un marketplace médical en direct','ایک زندہ طبی مارکیٹ پلیس'],
+ hero_title_a:['سوق طبي واحد','One medical market','Единый медицинский рынок','Ein medizinischer Marktplatz','ひとつの医療市場','하나의 의료 시장','一个医疗市场','Un solo mercado médico','Un unico mercato medico','Um único mercado médico','Un seul marché médical','ایک طبی مارکیٹ'],
+ hero_title_b:['لتوظيف الكوادر وإدارة المناقصات','for hiring staff and managing RFQs','для найма персонала и управления заявками','für Personalvermittlung und Ausschreibungen','人材採用と調達依頼の管理のために','인력 채용과 견적요청 관리를 위한','用于人才招聘与招标管理','para contratar personal y gestionar solicitudes','per assumere personale e gestire richieste','para contratar profissionais e gerenciar RFQs','pour recruter et gérer les appels d\'offres','عملے کی بھرتی اور درخواستوں کے انتظام کے لیے'],
+ hero_lead:['MedLink تربط المنشآت الصحية بالكوادر الطبية المؤهلة، وتدير مناقصات الأجهزة والخدمات مع الموردين — بخصوصية كاملة وتوثيق موثوق لكل طرف.','MedLink connects healthcare facilities with qualified medical talent and manages equipment & service RFQs with suppliers — with full privacy and verified trust.','MedLink соединяет медучреждения с квалифицированным персоналом и управляет тендерами с поставщиками.','MedLink verbindet Gesundheitseinrichtungen mit qualifiziertem medizinischem Personal und verwaltet Ausschreibungen.','MedLinkは医療機関と有資格の医療人材を結び、サプライヤーとの調達依頼を管理します。','MedLink는 의료기관과 자격을 갖춘 의료 인력을 연결하고 공급업체와의 견적 요청을 관리합니다.','MedLink 连接医疗机构与合格医疗人才,管理与供应商的设备及服务招标。','MedLink conecta instalaciones de salud con talento médico calificado y gestiona solicitudes de equipos.','MedLink collega strutture sanitarie a personale medico qualificato e gestisce le richieste di attrezzature.','A MedLink conecta instituições de saúde a profissionais médicos qualificados e gerencia RFQs de equipamentos.','MedLink relie les établissements de santé à des talents médicaux qualifiés et gère les appels d\'offres.','MedLink صحت کی سہولیات کو اہل طبی عملے سے جوڑتا ہے اور سپلائرز کے ساتھ درخواستیں منظم کرتا ہے۔'],
+ hero_cta1:['استعرض الكوادر الطبية','Browse Medical Staff','Смотреть персонал','Fachkräfte ansehen','医療スタッフを見る','의료진 보기','浏览医护人员','Ver personal médico','Sfoglia il personale','Ver profissionais','Voir le personnel','طبی عملہ دیکھیں'],
+ hero_cta2:['تصفح المناقصات','Browse RFQs','Смотреть заявки','Anfragen ansehen','見積依頼を見る','견적요청 보기','浏览招标','Ver solicitudes','Sfoglia le richieste','Ver RFQs','Voir les appels d\'offres','درخواستیں دیکھیں'],
+ hero_stat_staff:['كادر طبي مسجّل','Registered staff','Персонал в базе','Registrierte Fachkräfte','登録医療スタッフ','등록된 의료진','注册医护人员','Personal registrado','Personale registrato','Profissionais registrados','Personnel enregistré','رجسٹرڈ عملہ'],
+ hero_stat_rfq:['مناقصة منشورة','Published RFQs','Опубликовано заявок','Veröffentlichte Anfragen','公開中の見積依頼','게시된 견적요청','已发布招标','Solicitudes publicadas','Richieste pubblicate','RFQs publicados','Appels d\'offres publiés','شائع شدہ درخواستیں'],
+ hero_stat_suppliers:['مورّد معتمد','Verified suppliers','Проверенных поставщиков','Verifizierte Lieferanten','認証サプライヤー','인증된 공급업체','认证供应商','Proveedores verificados','Fornitori verificati','Fornecedores verificados','Fournisseurs vérifiés','تصدیق شدہ سپلائرز'],
+ hero_badge:['مزامنة حية عبر Supabase','Live sync via Supabase','Синхронизация через Supabase','Live-Sync über Supabase','Supabase経由でライブ同期','Supabase 실시간 동기화','通过 Supabase 实时同步','Sincronización en vivo vía Supabase','Sincronizzazione live via Supabase','Sincronização ao vivo via Supabase','Synchronisation en direct via Supabase','Supabase کے ذریعے لائیو سنک'],
+ home_rfq_eyebrow:['أحدث الفرص','Latest opportunities','Последние заявки','Neueste Angebote','最新の案件','최신 기회','最新机会','Últimas oportunidades','Ultime opportunità','Últimas oportunidades','Dernières opportunités','تازہ ترین مواقع'],
+ home_rfq_title:['مناقصات منشورة الآن','RFQs published now','Заявки опубликованы сейчас','Aktuell veröffentlichte Anfragen','現在公開中の依頼','현재 게시된 요청','当前发布的招标','RFQs publicados ahora','Richieste pubblicate ora','RFQs publicados agora','Appels d\'offres publiés','ابھی شائع شدہ درخواستیں'],
+ home_rfq_sub:['فرص توظيف ومناقصات مستلزمات — منشورة بعد مراجعة فريق MedLink.','Hiring & procurement opportunities — published after MedLink review.','Возможности найма и закупок — публикуются после проверки.','Beschaffungs- und Personalchancen — nach Prüfung veröffentlicht.','採用と調達の機会 — 審査後に公開。','채용 및 조달 기회 — 검토 후 게시.','招聘和采购机会 — 经审核后发布。','Oportunidades de contratación y compras — publicadas tras revisión.','Opportunità di assunzione e appalti — pubblicate dopo revisione.','Oportunidades de contratação e compras — publicadas após revisão.','Opportunités de recrutement et d\'achats — publiées après vérification.','بھرتی اور خریداری کے مواقع — جائزے کے بعد شائع۔'],
+ home_staff_eyebrow:['كوادر مميزة','Featured talent','Избранные специалисты','Ausgewählte Fachkräfte','注目の人材','추천 인재','精选人才','Talento destacado','Talenti in evidenza','Talentos em destaque','Talents en vedette','نمایاں عملہ'],
+ home_staff_title:['تصفح نخبة من الكوادر الطبية','Browse top medical talent','Лучшие медицинские специалисты','Top-Fachkräfte durchsuchen','優秀な医療人材を見る','우수 의료 인재 보기','浏览顶尖医疗人才','Explora el mejor talento médico','Sfoglia i migliori talenti medici','Explore os melhores talentos','Parcourez les meilleurs talents','بہترین طبی ٹیلنٹ دیکھیں'],
+ home_staff_sub:['الأسماء وأرقام التواصل محمية — تظهر فقط للمنشآت الموثّقة عبر المنصة.','Names & phone numbers are protected — visible only to verified facilities.','Имена и телефоны защищены — видны только проверенным учреждениям.','Namen & Telefonnummern sind geschützt.','氏名と電話番号は保護されています。','이름과 전화번호는 보호됩니다.','姓名和电话号码受保护。','Nombres y teléfonos protegidos.','Nomi e numeri protetti.','Nomes e telefones protegidos.','Noms et numéros protégés.','نام اور فون نمبر محفوظ ہیں۔'],
+ home_partners_eyebrow:['شركاء النجاح','Success partners','Партнёры','Erfolgspartner','パートナー','성공 파트너','成功伙伴','Socios de éxito','Partner di successo','Parceiros de sucesso','Partenaires de succès','کامیابی کے شراکت دار'],
+ section_staff_eyebrow:['Talent Hub','Talent Hub','Talent Hub','Talent Hub','Talent Hub','Talent Hub','Talent Hub','Talent Hub','Talent Hub','Talent Hub','Talent Hub','Talent Hub'],
+ section_staff_title:['دليل الكوادر الطبية','Medical Talent Directory','Каталог медперсонала','Verzeichnis der Fachkräfte','医療人材ディレクトリ','의료 인재 디렉토리','医疗人才名录','Directorio de talento médico','Elenco talenti medici','Diretório de talentos médicos','Annuaire des talents médicaux','طبی ٹیلنٹ ڈائرکٹری'],
+ section_staff_sub:['تصفح الملفات التعريفية — الأسماء وأرقام التواصل محمية حتى تفعيل صلاحية منشأتك.','Browse profiles — names & phone numbers stay protected until your facility is verified.','Просматривайте профили — контакты защищены до верификации.','Profile durchsuchen — Kontakte geschützt bis zur Verifizierung.','プロフィールを閲覧 — 施設認証まで連絡先は保護されます。','프로필을 둘러보세요 — 기관 인증 전까지 연락처는 보호됩니다.','浏览资料 — 在贵机构通过验证前联系方式受保护。','Explora perfiles — los contactos permanecen protegidos.','Sfoglia i profili — i contatti restano protetti.','Explore perfis — contatos protegidos até a verificação.','Parcourez les profils — les contacts restent protégés.','پروفائلز دیکھیں — تصدیق تک رابطہ نمبر محفوظ رہتے ہیں۔'],
+ search_placeholder:['ابحث بالتخصص أو النبذة...','Search by specialty or bio...','Поиск по специальности...','Suche nach Fachgebiet...','専門分野で検索...','전문 분야로 검색...','按专业搜索...','Buscar por especialidad...','Cerca per specialità...','Buscar por especialidade...','Rechercher par spécialité...','خصوصیت سے تلاش کریں...'],
+ filter_all:['كل الأنواع','All types','Все типы','Alle Typen','すべて','전체','所有类型','Todos los tipos','Tutti i tipi','Todos os tipos','Tous les types','تمام اقسام'],
+ btn_request_number:['طلب بيانات التواصل','Request contact info','Запросить контакт','Kontakt anfragen','連絡先をリクエスト','연락처 요청','请求联系方式','Solicitar contacto','Richiedi contatto','Solicitar contato','Demander le contact','رابطہ کی درخواست'],
+ btn_view_profile:['عرض الملف','View profile','Смотреть профиль','Profil ansehen','プロフィールを見る','프로필 보기','查看资料','Ver perfil','Vedi profilo','Ver perfil','Voir le profil','پروفائل دیکھیں'],
+ badge_verified:['منشأة موثّقة','Verified facility','Проверено','Verifiziert','認証済み','인증됨','已认证','Verificado','Verificato','Verificado','Vérifié','تصدیق شدہ'],
+ badge_unverified:['غير موثّقة','Unverified','Не подтверждено','Nicht verifiziert','未認証','미인증','未认证','No verificado','Non verificato','Não verificado','Non vérifié','غیر تصدیق شدہ'],
+ section_rfq_eyebrow:['RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine','RFQ Engine'],
+ section_rfq_title:['المناقصات المنشورة','Published RFQs','Опубликованные заявки','Veröffentlichte Anfragen','公開中の依頼','게시된 요청','已发布招标','Solicitudes publicadas','Richieste pubblicate','RFQs publicados','Appels d\'offres publiés','شائع شدہ درخواستیں'],
+ section_rfq_sub:['طلبات توظيف كوادر ومناقصات مستلزمات طبية — تُنشر بعد مراجعة والتحقق من فريق MedLink.','Staffing requests & equipment RFQs — published after MedLink review & verification.','Заявки на персонал и оборудование — публикуются после проверки.','Personal- und Ausrüstungsanfragen — nach Prüfung veröffentlicht.','人材募集と機器調達依頼 — 審査後に公開。','인력 및 장비 요청 — 검토 후 게시.','人员及设备招标 — 经审核后发布。','Solicitudes de personal y equipos.','Richieste di personale e attrezzature.','Solicitações de pessoal e equipamentos.','Demandes de personnel et d\'équipement.','عملہ اور آلات کی درخواستیں۔'],
+ rfq_type_staff:['بحث عن كوادر','Staff search','Поиск персонала','Personalsuche','人材募集','인력 검색','人员招聘','Búsqueda de personal','Ricerca personale','Busca de pessoal','Recherche de personnel','عملے کی تلاش'],
+ rfq_type_supply:['مستلزمات وموردين','Equipment & suppliers','Оборудование и поставщики','Ausrüstung & Lieferanten','機器・サプライヤー','장비 및 공급업체','设备与供应商','Equipos y proveedores','Attrezzature e fornitori','Equipamentos e fornecedores','Équipement et fournisseurs','آلات اور سپلائرز'],
+ btn_new_rfq:['+ طلب مناقصة جديد','+ New RFQ','+ Новая заявка','+ Neue Anfrage','+ 新規依頼','+ 신규 요청','+ 新建招标','+ Nueva solicitud','+ Nuova richiesta','+ Novo RFQ','+ Nouvel appel d\'offres','+ نئی درخواست'],
+ section_suppliers_eyebrow:['Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace','Suppliers Marketplace'],
+ section_suppliers_title:['الموردون المعتمدون','Verified Suppliers','Проверенные поставщики','Verifizierte Lieferanten','認証サプライヤー','인증된 공급업체','认证供应商','Proveedores verificados','Fornitori verificati','Fornecedores verificados','Fournisseurs vérifiés','تصدیق شدہ سپلائرز'],
+ section_suppliers_sub:['شركات معدات، تشغيل وصيانة، ومقاولات صحية — مدرجة رسميًا في سوق MedLink.','Equipment, O&M, and healthcare contracting firms — officially listed on MedLink.','Компании оборудования, эксплуатации и подрядчики.','Ausrüstungs-, Wartungs- und Baufirmen.','機器・O&M・建設会社。','장비, O&M, 건설 회사.','设备、运维及建筑公司。','Empresas de equipos, O&M y contratación.','Aziende di attrezzature, O&M e appalti.','Empresas de equipamentos, O&M e contratação.','Entreprises d\'équipement, O&M et BTP.','آلات، O&M اور تعمیراتی کمپنیاں۔'],
+ btn_become_supplier:['سجّل كمورد في المنصة','Register as a supplier','Стать поставщиком','Als Lieferant registrieren','サプライヤー登録','공급업체로 등록','注册为供应商','Regístrate como proveedor','Registrati come fornitore','Cadastre-se como fornecedor','S\'inscrire comme fournisseur','بطور سپلائر رجسٹر کریں'],
+ login_title:['تسجيل الدخول','Log in','Вход','Anmelden','ログイン','로그인','登录','Iniciar sesión','Accedi','Entrar','Connexion','لاگ ان'],
+ login_sub:['ادخل لحسابك كمنشأة، كادر طبي، أو مورد.','Sign in as a facility, staff member, or supplier.','Войдите как учреждение, специалист или поставщик.','Melden Sie sich an.','施設、スタッフ、サプライヤーとしてログイン。','기관, 의료진 또는 공급업체로 로그인하세요.','以机构、医护人员或供应商身份登录。','Inicia sesión.','Accedi.','Entre.','Connectez-vous.','لاگ ان کریں۔'],
+ field_email:['البريد الإلكتروني','Email address','Эл. почта','E-Mail-Adresse','メールアドレス','이메일 주소','电子邮箱','Correo electrónico','Indirizzo email','E-mail','Adresse e-mail','ای میل ایڈریس'],
+ field_password:['كلمة المرور','Password','Пароль','Passwort','パスワード','비밀번호','密码','Contraseña','Password','Senha','Mot de passe','پاس ورڈ'],
+ login_submit:['دخول','Log in','Войти','Anmelden','ログイン','로그인','登录','Entrar','Accedi','Entrar','Se connecter','لاگ ان کریں'],
+ login_no_account:['ليس لديك حساب؟','No account yet?','Нет аккаунта?','Noch kein Konto?','アカウントをお持ちでない方','계정이 없으신가요?','还没有账户？','¿No tienes cuenta?','Non hai un account?','Ainda não tem conta?','Pas encore de compte ?','ابھی تک اکاؤنٹ نہیں؟'],
+ register_title:['إنشاء حساب جديد','Create an account','Создать аккаунт','Konto erstellen','アカウント作成','계정 만들기','创建账户','Crear una cuenta','Crea un account','Criar uma conta','Créer un compte','اکاؤنٹ بنائیں'],
+ register_sub:['اختر نوع الحساب المناسب لك.','Choose the account type that fits you.','Выберите подходящий тип аккаунта.','Wählen Sie den passenden Kontotyp.','あなたに合ったアカウント種別を選択。','적합한 계정 유형을 선택하세요.','选择适合您的账户类型。','Elige el tipo de cuenta adecuado.','Scegli il tipo di account adatto.','Escolha o tipo de conta ideal.','Choisissez le type de compte adapté.','اپنے لیے موزوں اکاؤنٹ کی قسم منتخب کریں۔'],
+ register_role_client:['منشأة / عميل','Facility / Client','Учреждение','Einrichtung','施設・クライアント','기관/고객','机构/客户','Instalación/Cliente','Struttura/Cliente','Instituição/Cliente','Établissement/Client','ادارہ/کلائنٹ'],
+ register_role_staff:['كادر طبي','Medical staff','Медперсонал','Fachkraft','医療スタッフ','의료진','医护人员','Personal médico','Personale medico','Profissional médico','Personnel médical','طبی عملہ'],
+ register_role_supplier:['مورّد','Supplier','Поставщик','Lieferant','サプライヤー','공급업체','供应商','Proveedor','Fornitore','Fornecedor','Fournisseur','سپلائر'],
+ register_submit:['إنشاء الحساب','Create account','Создать аккаунт','Konto erstellen','アカウント作成','계정 생성','创建账户','Crear cuenta','Crea account','Criar conta','Créer le compte','اکاؤنٹ بنائیں'],
+ register_have_account:['لديك حساب؟','Already have an account?','Уже есть аккаунт?','Bereits ein Konto?','アカウントをお持ちの方','이미 계정이 있으신가요?','已有账户？','¿Ya tienes cuenta?','Hai già un account?','Já tem uma conta?','Vous avez déjà un compte ?','پہلے سے اکاؤنٹ ہے؟'],
+ field_orgname:['اسم الجهة','Facility name','Название учреждения','Name der Einrichtung','施設名','기관명','机构名称','Nombre de la instalación','Nome della struttura','Nome da instituição','Nom de l\'établissement','ادارے کا نام'],
+ field_orgtype:['نوع الجهة','Facility type','Тип учреждения','Art der Einrichtung','施設種別','기관 유형','机构类型','Tipo de instalación','Tipo di struttura','Tipo de instituição','Type d\'établissement','ادارے کی قسم'],
+ field_city:['المدينة','City','Город','Stadt','都市','도시','城市','Ciudad','Città','Cidade','Ville','شہر'],
+ field_branches:['الفروع (اختياري)','Branches (optional)','Филиалы','Filialen (optional)','支店(任意)','지점(선택)','分支机构（可选）','Sucursales (opcional)','Filiali (opzionale)','Filiais (opcional)','Succursales (facultatif)','شاخیں (اختیاری)'],
+ field_add_branch:['+ إضافة فرع','+ Add branch','+ Добавить филиал','+ Filiale hinzufügen','+ 支店追加','+ 지점 추가','+ 添加分支','+ Añadir sucursal','+ Aggiungi filiale','+ Adicionar filial','+ Ajouter une succursale','+ شاخ شامل کریں'],
+ field_fullname:['الاسم الكامل (لن يظهر للعامة)','Full name (kept private)','Полное имя (скрыто)','Vollständiger Name (privat)','氏名(非公開)','성명(비공개)','全名（不公开）','Nombre completo (privado)','Nome completo (privato)','Nome completo (privado)','Nom complet (privé)','مکمل نام (نجی)'],
+ field_phone:['رقم الجوال (لن يظهر للعامة)','Phone number (kept private)','Телефон (скрыт)','Telefonnummer (privat)','電話番号(非公開)','전화번호(비공개)','电话号码（不公开）','Teléfono (privado)','Telefono (privato)','Telefone (privado)','Téléphone (privé)','فون نمبر (نجی)'],
+ field_gender:['الجنس','Gender','Пол','Geschlecht','性別','성별','性别','Género','Genere','Gênero','Genre','جنس'],
+ field_specialty:['التخصص','Specialty','Специальность','Fachgebiet','専門分野','전문 분야','专业','Especialidad','Specialità','Especialidade','Spécialité','خصوصیت'],
+ field_nationality:['الجنسية','Nationality','Гражданство','Nationalität','国籍','국적','国籍','Nacionalidad','Nazionalità','Nacionalidade','Nationalité','قومیت'],
+ field_experience:['سنوات الخبرة','Years of experience','Опыт (лет)','Berufserfahrung','経験年数','경력(년)','工作经验(年)','Años de experiencia','Anni di esperienza','Anos de experiência','Années d\'expérience','تجربے کے سال'],
+ field_bio:['نبذة تعريفية (تظهر للعامة)','Public bio','Публичное описание','Öffentliche Biografie','公開プロフィール','공개 소개','公开简介','Biografía pública','Biografia pubblica','Biografia pública','Biographie publique','عوامی تعارف'],
+ field_company:['اسم الشركة','Company name','Название компании','Firmenname','会社名','회사명','公司名称','Nombre de la empresa','Nome dell\'azienda','Nome da empresa','Nom de l\'entreprise','کمپنی کا نام'],
+ field_category:['فئة النشاط','Business category','Категория бизнеса','Geschäftskategorie','事業カテゴリー','사업 분야','业务类别','Categoría de negocio','Categoria aziendale','Categoria de negócio','Catégorie d\'activité','کاروباری قسم'],
+ field_services:['وصف الخدمات/المنتجات','Products/services description','Описание услуг/продуктов','Beschreibung der Dienstleistungen','製品・サービス説明','제품/서비스 설명','产品/服务描述','Descripción de productos/servicios','Descrizione prodotti/servizi','Descrição de produtos/serviços','Description des produits/services','مصنوعات/خدمات کی تفصیل'],
+ verify_pending_title:['حسابك قيد التفعيل','Your account is pending activation','Ваш аккаунт ожидает активации','Ihr Konto wird aktiviert','アカウントは有効化待ちです','계정 활성화 대기 중','您的账户正在等待激活','Tu cuenta está pendiente de activación','Il tuo account è in attesa di attivazione','Sua conta está pendente de ativação','Votre compte est en attente d\'activation','آپ کا اکاؤنٹ فعال ہونے کا منتظر ہے'],
+ verify_pending_note:['حوّل رسوم الاشتراك عبر الآيبان أدناه، ثم أرسل نسخة من إيصال التحويل إلى بريد التفعيل مع اسم جهتك، وسنفعّل حسابك خلال وقت قصير.','Transfer the subscription fee to the IBAN below, then email the receipt with your organization name.','Переведите взнос на указанный IBAN, отправьте квитанцию на email.','Überweisen Sie die Gebühr an die IBAN unten.','下記IBANへ料金を送金後、領収書をメールしてください。','아래 IBAN으로 요금을 송금한 후 영수증을 이메일로 보내주세요.','请将费用转账至以下 IBAN，并将收据发送至邮箱。','Transfiere la cuota al IBAN indicado.','Trasferisci la quota all\'IBAN indicato.','Transfira a taxa para o IBAN abaixo.','Virez les frais à l\'IBAN ci-dessous.','ذیل میں دیے گئے IBAN پر فیس منتقل کریں۔'],
+ iban_beneficiary:['المستفيد','Beneficiary','Получатель','Begünstigter','受取人','수취인','受益人','Beneficiario','Beneficiario','Beneficiário','Bénéficiaire','فائدہ اٹھانے والا'],
+ iban_number:['رقم الآيبان','IBAN number','Номер IBAN','IBAN-Nummer','IBAN番号','IBAN 번호','IBAN 号码','Número IBAN','Numero IBAN','Número IBAN','Numéro IBAN','آئی بی اے این نمبر'],
+ iban_bank:['البنك','Bank','Банк','Bank','銀行','은행','银行','Banco','Banca','Banco','Banque','بینک'],
+ iban_email:['إرسال الإيصال إلى','Send receipt to','Отправить квитанцию на','Beleg senden an','領収書送付先','영수증 발송처','收据发送至','Enviar recibo a','Invia ricevuta a','Enviar comprovante para','Envoyer le reçu à','رسید بھیجیں'],
+ btn_mark_transferred:['تم التحويل، أخطر الإدارة','I\'ve transferred, notify admin','Перевод выполнен, уведомить','Überwiesen, Admin benachrichtigen','送金完了、管理者に通知','송금 완료, 관리자에게 알림','已转账，通知管理员','Transferido, notificar al admin','Trasferito, notifica l\'admin','Transferido, notificar admin','Viré, notifier l\'admin','منتقلی ہوگئی، ایڈمن کو مطلع کریں'],
+ verify_pending_admin_note:['سيقوم فريقنا بمراجعة التحويل وتفعيل صلاحياتك الكاملة من لوحة التحكم.','Our team will review the transfer and activate your full access.','Наша команда проверит перевод и активирует полный доступ.','Unser Team prüft die Überweisung.','当社チームが送金を確認します。','저희 팀이 송금을 확인합니다.','我们的团队将审核转账。','Nuestro equipo revisará la transferencia.','Il nostro team verificherà il trasferimento.','Nossa equipe revisará a transferência.','Notre équipe vérifiera le virement.','ہماری ٹیم منتقلی کا جائزہ لے گی۔'],
+ footer_about:['سوق طبي يربط المنشآت الصحية بالكوادر والموردين بخصوصية وثقة كاملة.','A medical marketplace connecting facilities, staff, and suppliers with full privacy and trust.','Медицинский маркетплейс, соединяющий учреждения, персонал и поставщиков.','Ein Medizinmarktplatz für Einrichtungen, Fachkräfte und Lieferanten.','医療機関、人材、サプライヤーを結ぶ医療マーケットプレイス。','의료기관, 인력, 공급업체를 연결하는 마켓플레이스.','连接医疗机构、人才和供应商的医疗市场平台。','Un mercado médico que conecta instalaciones, personal y proveedores.','Un marketplace medico che collega strutture, personale e fornitori.','Um marketplace médico que conecta instituições e profissionais.','Un marketplace médical reliant établissements et personnel.','ایک طبی مارکیٹ پلیس جو اداروں اور عملے کو جوڑتا ہے۔'],
+ footer_platform:['المنصة','Platform','Платформа','Plattform','プラットフォーム','플랫폼','平台','Plataforma','Piattaforma','Plataforma','Plateforme','پلیٹ فارم'],
+ footer_contact:['تواصل معنا','Contact us','Связаться с нами','Kontakt','お問い合わせ','문의하기','联系我们','Contáctanos','Contattaci','Contate-nos','Contactez-nous','ہم سے رابطہ کریں'],
+ footer_rights:['© 2026 MedLink. جميع الحقوق محفوظة.','© 2026 MedLink. All rights reserved.','© 2026 MedLink. Все права защищены.','© 2026 MedLink. Alle Rechte vorbehalten.','© 2026 MedLink. 無断複写・転載を禁じます。','© 2026 MedLink. All rights reserved.','© 2026 MedLink. 保留所有权利。','© 2026 MedLink. Todos los derechos reservados.','© 2026 MedLink. Tutti i diritti riservati.','© 2026 MedLink. Todos os direitos reservados.','© 2026 MedLink. Tous droits réservés.','© 2026 MedLink۔ جملہ حقوق محفوظ ہیں۔'],
+};
+function t(key){ const row=TR[key]; if(!row) return key; const idx=LANGS.indexOf(currentLang); return row[idx]||row[1]||key; }
+function applyLang(){
+  document.getElementById('htmlRoot').lang = currentLang;
+  document.getElementById('htmlRoot').dir = RTL_LANGS.includes(currentLang)?'rtl':'ltr';
+  document.getElementById('langLabel').textContent = currentLang.toUpperCase();
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{ el.setAttribute('placeholder', t(el.getAttribute('data-i18n-placeholder'))); });
+  buildLangMenu();
+  localStorage.setItem('ml_lang', currentLang);
+  renderStaticOptions();
+  refreshCurrentViewData();
+}
+function buildLangMenu(){
+  const menu = document.getElementById('langMenu');
+  menu.innerHTML = LANGS.map(l=>`<button class="${l===currentLang?'active':''}" onclick="setLang('${l}')">${LANG_NAMES[l]}<span>${l===currentLang?'✓':''}</span></button>`).join('');
+}
+function setLang(l){ currentLang = l; applyLang(); document.getElementById('langMenu').classList.remove('open'); }
+function toggleLangMenu(){ document.getElementById('langMenu').classList.toggle('open'); }
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.lang-switch')) document.getElementById('langMenu')?.classList.remove('open');
+  if(!e.target.closest('.user-chip') && !e.target.closest('.user-menu')) document.getElementById('userMenuEl')?.classList.remove('open');
+});
+
+/* ==========================================================================
+   SESSION / CURRENT USER STATE  (backed by real Supabase Auth)
+========================================================================== */
+let me = null; // { authUser, profile:{id,role,email}, extra:{...role-specific row} }
+
+async function refreshMe(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session){ me = null; return; }
+  const authUser = session.user;
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', authUser.id).single();
+  if(!profile){ me = { authUser, profile:null, extra:null }; return; }
+  let extra = null;
+  if(profile.role==='client'){
+    const { data } = await sb.from('client_profiles').select('*').eq('profile_id', authUser.id).single();
+    extra = data;
+  } else if(profile.role==='staff'){
+    const { data: pub } = await sb.from('staff_public').select('*').eq('profile_id', authUser.id).single();
+    const { data: priv } = await sb.from('staff_private').select('*').eq('profile_id', authUser.id).single();
+    extra = Object.assign({}, pub, priv);
+  } else if(profile.role==='supplier'){
+    const { data } = await sb.from('supplier_profiles').select('*').eq('profile_id', authUser.id).single();
+    extra = data;
+  }
+  me = { authUser, profile, extra };
+}
+function isLoggedIn(){ return !!me; }
+function myRole(){ return me?.profile?.role || null; }
+
+async function logout(){
+  await sb.auth.signOut();
+  me = null;
+  renderNavAuth();
+  go('home');
+  showToast(t('nav_logout'));
+}
+
+/* ==========================================================================
+   ROUTER
+========================================================================== */
+let currentView = 'home';
+function go(viewName){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+viewName).classList.add('active');
+  currentView = viewName;
+  window.scrollTo({top:0, behavior:'smooth'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  refreshCurrentViewData();
+}
+function refreshCurrentViewData(){
+  if(currentView==='home') renderHome();
+  else if(currentView==='staffDirectory') renderStaffDirectory();
+  else if(currentView==='rfqFeed') renderRfqFeed();
+  else if(currentView==='rfqNew') renderRfqNewForm();
+  else if(currentView==='suppliers') renderSuppliers();
+  else if(currentView==='dashboard') renderDashboard();
+  else if(currentView==='admin') renderAdmin();
+  renderFooterDynamic();
+}
+
+/* ==========================================================================
+   NAV AUTH AREA
+========================================================================== */
+function renderNavAuth(){
+  const area = document.getElementById('navAuthArea');
+  if(!me || !me.profile){
+    area.innerHTML = `
+      <button class="btn btn-ghost btn-sm" onclick="go('login')">${t('nav_login')}</button>
+      <button class="btn btn-primary btn-sm" onclick="go('register')">${t('nav_register')}</button>`;
+    return;
+  }
+  const label = me.extra?.org_name || me.extra?.full_name || me.extra?.company || me.authUser.email;
+  const initials = (label||'?').trim()[0]||'?';
+  const roleLabel = me.profile.role==='client'?t('register_role_client'):me.profile.role==='staff'?t('register_role_staff'):me.profile.role==='supplier'?t('register_role_supplier'):'Admin';
+  area.innerHTML = `
+    <div style="position:relative;">
+      <div class="user-chip" onclick="document.getElementById('userMenuEl').classList.toggle('open')">
+        <div class="av">${initials}</div><span>${roleLabel}</span>
+      </div>
+      <div class="user-menu" id="userMenuEl">
+        <a href="#" onclick="go('${me.profile.role==='admin'?'admin':'dashboard'}');document.getElementById('userMenuEl').classList.remove('open');return false">${me.profile.role==='admin'?'لوحة الإدارة':t('nav_dashboard')}</a>
+        <button onclick="logout()">${t('nav_logout')}</button>
+      </div>
+    </div>`;
+}
+
+/* ==========================================================================
+   AUTH ACTIONS
+========================================================================== */
+async function doLogin(e){
+  e.preventDefault();
+  const btn = document.getElementById('loginSubmitBtn'); setBtnLoading(btn,true);
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  setBtnLoading(btn,false);
+  if(error){ showToast(currentLang==='ar'?'بيانات الدخول غير صحيحة أو الحساب غير مؤكد':'Invalid credentials or unconfirmed email'); return; }
+  await refreshMe();
+  renderNavAuth();
+  showToast(currentLang==='ar'?'تم تسجيل الدخول':'Logged in');
+  if(me.profile.role==='admin'){ go('admin'); return; }
+  if((me.profile.role==='client'||me.profile.role==='supplier') && me.extra && me.extra.status!=='active'){ go('verifyPending'); return; }
+  go('dashboard');
+}
+
+let regRole = 'client';
+function setRegRole(role){
+  regRole = role;
+  ['Client','Staff','Supplier'].forEach(r=> document.getElementById('tab'+r).classList.toggle('active', r.toLowerCase()===role));
+  document.getElementById('fieldsClient').style.display = role==='client'?'block':'none';
+  document.getElementById('fieldsStaff').style.display = role==='staff'?'block':'none';
+  document.getElementById('fieldsSupplier').style.display = role==='supplier'?'block':'none';
+}
+function addBranchRow(){
+  const wrap = document.getElementById('branchList');
+  const row = document.createElement('div'); row.className='branch-row';
+  row.innerHTML = `<input type="text" placeholder="اسم الفرع والمدينة"><button type="button" class="small-x" onclick="this.parentElement.remove()">✕</button>`;
+  wrap.appendChild(row);
+}
+function setBtnLoading(btn, loading){
+  if(!btn) return;
+  btn.disabled = loading;
+  if(loading){ btn.dataset.label = btn.innerHTML; btn.innerHTML = '<span class="spinner"></span>'; }
+  else if(btn.dataset.label){ btn.innerHTML = btn.dataset.label; }
+}
+
+async function submitRegister(e){
+  e.preventDefault();
+  const btn = document.getElementById('registerSubmitBtn'); setBtnLoading(btn,true);
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+
+  const { data, error } = await sb.auth.signUp({ email, password, options:{ data:{ role: regRole } } });
+  if(error){ setBtnLoading(btn,false); showToast(error.message); return; }
+  const newUser = data.user;
+  const hasSession = !!data.session;
+
+  // If email confirmation is required, we still write the profile row now so it's ready once confirmed —
+  // but RLS insert policies require the user to be authenticated as themselves, so this only fully succeeds
+  // once a session exists (immediate if email confirmation is disabled on the project).
+  if(hasSession){
+    await sb.auth.setSession(data.session);
+    try{
+      if(regRole==='client'){
+        const branches = Array.from(document.querySelectorAll('#branchList input')).map(i=>i.value).filter(Boolean);
+        await sb.from('client_profiles').insert({
+          profile_id:newUser.id, org_name: document.getElementById('regOrgName').value.trim()||'منشأة صحية',
+          org_type: document.getElementById('regOrgType').value, city: document.getElementById('regCity').value, branches
+        });
+      } else if(regRole==='staff'){
+        await sb.from('staff_public').insert({
+          profile_id:newUser.id, specialty: document.getElementById('regSpecialty').value, nationality: document.getElementById('regNationality').value,
+          city: document.getElementById('regCity2').value, gender: document.getElementById('regGender').value,
+          experience: Number(document.getElementById('regExperience').value)||0, bio: document.getElementById('regBio').value.trim()||'—'
+        });
+        await sb.from('staff_private').insert({
+          profile_id:newUser.id, full_name: document.getElementById('regFullName').value.trim()||'كادر طبي',
+          phone: document.getElementById('regPhone').value.trim()
+        });
+      } else {
+        await sb.from('supplier_profiles').insert({
+          profile_id:newUser.id, company: document.getElementById('regCompany').value.trim()||'شركة مورّد',
+          category: document.getElementById('regCategory').value, services: document.getElementById('regServices').value.trim()
+        });
+      }
+    } catch(err){ console.error(err); }
+    await refreshMe();
+    renderNavAuth();
+    setBtnLoading(btn,false);
+    document.getElementById('registerForm').reset();
+    if(regRole==='staff'){ showToast(currentLang==='ar'?'تم إنشاء ملفك بنجاح':'Profile created'); go('dashboard'); }
+    else { go('verifyPending'); }
+  } else {
+    setBtnLoading(btn,false);
+    document.getElementById('registerForm').reset();
+    showToast(currentLang==='ar'?'راجع بريدك لتأكيد الحساب، ثم سجّل الدخول لإكمال ملفك.':'Check your email to confirm your account, then log in to finish your profile.');
+    go('login');
+  }
+}
+function markTransferred(){
+  showToast(currentLang==='ar'?'تم إخطار الإدارة، سيتم مراجعة طلبك قريبًا':'Admin notified, your request will be reviewed soon');
+}
+
+/* ==========================================================================
+   STATIC OPTIONS (filters/selects) — from settings.filters
+========================================================================== */
+let SETTINGS = null;
+function fillSelect(el, arr, withAllLabel){
+  if(!el || !arr) return;
+  const cur = el.value;
+  el.innerHTML = (withAllLabel? `<option value="">${t('filter_all')}</option>`:'') + arr.map(v=>`<option value="${v}">${v}</option>`).join('');
+  if(cur) el.value = cur;
+}
+function renderStaticOptions(){
+  if(!SETTINGS) return;
+  const f = SETTINGS.filters||{};
+  fillSelect(document.getElementById('regCity'), f.cities, false);
+  fillSelect(document.getElementById('regCity2'), f.cities, false);
+  fillSelect(document.getElementById('regSpecialty'), f.specialties, false);
+  fillSelect(document.getElementById('regNationality'), f.nationalities, false);
+  fillSelect(document.getElementById('fSpecialty'), f.specialties, true);
+  fillSelect(document.getElementById('fNationality'), f.nationalities, true);
+  fillSelect(document.getElementById('fCity'), f.cities, true);
+}
+async function loadSettings(){
+  const { data } = await sb.from('settings').select('*').eq('id',1).single();
+  SETTINGS = data;
+  renderStaticOptions();
+}
+
+/* ==========================================================================
+   ICONS
+========================================================================== */
+const ICO = {
+  lock:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>`,
+  check:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>`,
+  phone:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+  eye:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+};
+
+/* ==========================================================================
+   HOME
+========================================================================== */
+async function renderHome(){
+  const [{count:staffCount}, {count:rfqCount}, {count:supplierCount}] = await Promise.all([
+    sb.from('staff_public').select('*', {count:'exact', head:true}),
+    sb.from('rfqs').select('*', {count:'exact', head:true}).eq('status','published'),
+    sb.from('supplier_profiles').select('*', {count:'exact', head:true}).eq('paid', true),
+  ]);
+  document.getElementById('statStaffCount').textContent = staffCount ?? '0';
+  document.getElementById('statRfqCount').textContent = rfqCount ?? '0';
+  document.getElementById('statSupplierCount').textContent = supplierCount ?? '0';
+
+  const { data: pubRfqs } = await sb.from('rfqs').select('*').eq('status','published').order('created_at',{ascending:false}).limit(3);
+  document.getElementById('homeRfqStrip').innerHTML = (pubRfqs&&pubRfqs.length)? pubRfqs.map(rfqCardHtml).join('') : `<div class="empty-note" style="grid-column:1/-1;">${currentLang==='ar'?'لا توجد مناقصات منشورة حاليًا':'No published RFQs yet'}</div>`;
+
+  const { data: feat } = await sb.from('staff_public').select('*').order('created_at',{ascending:false}).limit(3);
+  document.getElementById('homeStaffStrip').innerHTML = (feat||[]).map(staffCardHtml).join('');
+
+  if(SETTINGS){
+    const items = (SETTINGS.partners||[]).concat(SETTINGS.partners||[]);
+    document.getElementById('partnersMarquee').innerHTML = items.map(p=>`<div class="marquee-item"><span class="sq"></span>${p}</div>`).join('');
+  }
+}
+function renderFooterDynamic(){
+  if(!SETTINGS) return;
+  document.getElementById('footerContactInfo').innerHTML = `
+    <div style="font-size:13px; color:var(--ink-soft); padding:5px 0;">${SETTINGS.contact_email||''}</div>
+    <div style="font-size:13px; color:var(--ink-soft); padding:5px 0;" class="ltr-num">${SETTINGS.contact_phone||''}</div>`;
+  const s = SETTINGS.social||{};
+  document.getElementById('socialRow').innerHTML = `
+    <a href="${s.twitter||'#'}" title="X/Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23 22h-6.9l-5.4-6.7L4.5 22H1.4l8.1-9.3L1 2h7l4.9 6.1L18.9 2Z"/></svg></a>
+    <a href="${s.linkedin||'#'}" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21H9z"/></svg></a>
+    <a href="${s.instagram||'#'}" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+    <a href="${s.youtube||'#'}" title="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.5-.45-5.2a3 3 0 0 0-2.1-2.1C18.75 4 12 4 12 4s-6.75 0-8.45.7a3 3 0 0 0-2.1 2.1C1 8.5 1 12 1 12s0 3.5.45 5.2a3 3 0 0 0 2.1 2.1C5.25 20 12 20 12 20s6.75 0 8.45-.7a3 3 0 0 0 2.1-2.1C23 15.5 23 12 23 12z"/><path d="M9.75 15.5v-7l6 3.5-6 3.5z" fill="#fff"/></svg></a>`;
+}
+
+/* ==========================================================================
+   STAFF CARD / DIRECTORY / PROFILE
+========================================================================== */
+const AVATAR_COLORS = ['#1A237E','#34C759','#12A6A0','#3949AB','#0E9F52'];
+function colorFor(id){ let sum=0; for(const c of String(id)) sum+=c.charCodeAt(0); return AVATAR_COLORS[sum%AVATAR_COLORS.length]; }
+
+function staffCardHtml(s){
+  return `
+  <div class="gcard staff-card">
+    <div class="staff-top">
+      <div class="avatar" style="background:${colorFor(s.profile_id)};">${(s.specialty||'؟')[0]}</div>
+      <div>
+        <div class="staff-name">${currentLang==='ar'?'كادر طبي محمي 🔒':'Protected profile 🔒'}</div>
+        <div class="staff-role">${s.specialty||''}</div>
+      </div>
+    </div>
+    <p class="staff-bio">${s.bio||''}</p>
+    <div class="tag-row">
+      <span class="tag">${s.city||''}</span>
+      <span class="tag">${s.nationality||''}</span>
+      <span class="tag">${s.experience||0}+ ${currentLang==='ar'?'سنوات خبرة':'yrs exp'}</span>
+    </div>
+    <div class="staff-actions">
+      <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="openStaffProfile('${s.profile_id}')">${t('btn_view_profile')}</button>
+    </div>
+  </div>`;
+}
+async function renderStaffDirectory(){
+  const grid = document.getElementById('staffGrid');
+  grid.innerHTML = `<div class="empty-note" style="grid-column:1/-1;">…</div>`;
+  const term = (document.getElementById('staffSearch').value||'').trim();
+  const fs = document.getElementById('fSpecialty').value;
+  const fn = document.getElementById('fNationality').value;
+  const fc = document.getElementById('fCity').value;
+  let q = sb.from('staff_public').select('*');
+  if(fs) q = q.eq('specialty', fs);
+  if(fn) q = q.eq('nationality', fn);
+  if(fc) q = q.eq('city', fc);
+  const { data, error } = await q;
+  let list = data || [];
+  if(term) list = list.filter(s => (s.specialty||'').includes(term) || (s.bio||'').includes(term));
+  grid.innerHTML = list.length? list.map(staffCardHtml).join('') : `<div class="empty-note" style="grid-column:1/-1;">${currentLang==='ar'?'لا نتائج مطابقة':'No matching results'}</div>`;
+}
+document.addEventListener('input', e=>{ if(e.target.id==='staffSearch') renderStaffDirectory(); });
+document.addEventListener('change', e=>{ if(['fSpecialty','fNationality','fCity'].includes(e.target.id)) renderStaffDirectory(); if(e.target.id==='fRfqType') renderRfqFeed(); });
+
+let currentProfileId = null;
+async function openStaffProfile(id){
+  currentProfileId = id; go('staffProfile'); await renderStaffProfile(id);
+  if(me && me.profile.role==='client'){
+    await sb.from('profile_views').insert({ staff_id:id, client_id:me.authUser.id, client_org_name: me.extra?.org_name, verified: !!me.extra?.verified });
+  }
+}
+async function renderStaffProfile(id){
+  const { data: s } = await sb.from('staff_public').select('*').eq('profile_id', id).single();
+  const body = document.getElementById('staffProfileBody');
+  if(!s){ body.innerHTML = `<div class="empty-note">Not found</div>`; return; }
+  body.innerHTML = `
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:18px;" onclick="go('staffDirectory')">${currentLang==='ar'?'← رجوع للدليل':'← Back to directory'}</button>
+    <div class="profile-hero">
+      <div class="profile-avatar" id="profAvatar" style="background:${colorFor(s.profile_id)};">${(s.specialty||'؟')[0]}</div>
+      <div style="flex:1; min-width:200px;">
+        <h2 id="profName" style="font-size:20px;">${currentLang==='ar'?'كادر طبي محمي 🔒':'Protected profile 🔒'}</h2>
+        <div class="tag-row">
+          <span class="tag">${s.specialty||''}</span><span class="tag">${s.city||''}</span><span class="tag">${s.nationality||''}</span>
+          <span class="tag">${s.experience||0}+ ${currentLang==='ar'?'سنوات خبرة':'yrs exp'}</span><span class="tag">${s.gender||''}</span>
+        </div>
+        <p style="margin-top:14px; font-size:14px; color:var(--ink-soft);">${s.bio||''}</p>
+        <div id="contactBlock" style="margin-top:18px;">
+          <div class="locked-block" id="lockBlock">
+            <span style="font-size:13px; color:var(--ink-faint);">${currentLang==='ar'?'بيانات التواصل محمية.':'Contact details are protected.'}</span>
+          </div>
+          <button class="btn btn-green" id="reqBtn" style="margin-top:10px;" onclick="requestNumber('${s.profile_id}')">${ICO.lock} ${t('btn_request_number')}</button>
+        </div>
+      </div>
+    </div>`;
+}
+async function requestNumber(staffId){
+  if(!me){ showToast(currentLang==='ar'?'سجّل دخولك كمنشأة موثّقة أولًا':'Log in as a verified facility first'); go('login'); return; }
+  const btn = document.getElementById('reqBtn'); setBtnLoading(btn,true);
+  const { data, error } = await sb.from('staff_private').select('full_name,phone').eq('profile_id', staffId).single();
+  setBtnLoading(btn,false);
+  if(error || !data){
+    if(me.profile.role==='client' && me.extra && !me.extra.verified){
+      document.getElementById('lockBlock').innerHTML = `<span style="font-size:13px; color:var(--ink-faint);">${currentLang==='ar'?'أكمل تفعيل حساب منشأتك لعرض بيانات التواصل.':'Complete your facility verification to view contact details.'}</span> <a href="#" class="link-inline" onclick="go('verifyPending');return false">${currentLang==='ar'?'إكمال التفعيل':'Complete activation'}</a>`;
+    } else {
+      showToast(currentLang==='ar'?'يجب تسجيل الدخول كمنشأة موثّقة لعرض بيانات التواصل':'You must be a verified facility to view contact details');
+    }
+    return;
+  }
+  document.getElementById('profName').textContent = data.full_name;
+  const lb = document.getElementById('lockBlock');
+  lb.classList.add('revealed');
+  lb.innerHTML = `<div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:13.5px;">${ICO.phone} <span class="ltr-num">${data.phone}</span></div>`;
+  document.getElementById('reqBtn').remove();
+  if(me.profile.role==='client'){
+    await sb.from('contact_requests').insert({ staff_id:staffId, client_id:me.authUser.id, client_org_name: me.extra?.org_name });
+  }
+  showToast(currentLang==='ar'?'تم كشف بيانات التواصل، وتم تسجيل الطلب لدى الإدارة':'Contact revealed — logged for admin analytics');
+}
+
+/* ==========================================================================
+   RFQ
+========================================================================== */
+function rfqCardHtml(r){
+  const showRequester = r.type==='staff';
+  return `
+  <div class="rfq-card type-${r.type}">
+    <div class="rfq-top">
+      <div>
+        <div class="rfq-title">${r.title}</div>
+        <div class="rfq-sub">${showRequester? (r.hospital_name||'') : (currentLang==='ar'?'جهة صحية مسجّلة':'A registered healthcare facility')} · ${r.city||''}</div>
+      </div>
+      <div class="rfq-badge ${r.type}">${r.type==='staff'? t('rfq_type_staff') : t('rfq_type_supply')}</div>
+    </div>
+    <p class="rfq-desc">${r.description||''}</p>
+    <div class="rfq-meta">
+      <span>📅 ${r.deadline||''}</span>
+      ${r.type==='supply'? `<span>📦 ${currentLang==='ar'?'الكمية':'Qty'}: ${r.qty||''}</span>`:''}
+      ${r.type==='staff'? `<span>🩺 ${r.specialty||''}</span>`:''}
+    </div>
+  </div>`;
+}
+async function renderRfqFeed(){
+  const list = document.getElementById('rfqFeedList');
+  list.innerHTML = `<div class="empty-note">…</div>`;
+  const ft = document.getElementById('fRfqType').value;
+  let q = sb.from('rfqs').select('*').eq('status','published').order('created_at',{ascending:false});
+  if(ft) q = q.eq('type', ft);
+  const { data } = await q;
+  list.innerHTML = (data&&data.length)? data.map(rfqCardHtml).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد مناقصات مطابقة':'No matching RFQs'}</div>`;
+}
+async function renderRfqNewForm(){
+  const body = document.getElementById('rfqNewBody');
+  if(!me || me.profile.role!=='client'){
+    body.innerHTML = `<div class="empty-note">${currentLang==='ar'?'يجب تسجيل الدخول كمنشأة لطلب مناقصة.':'You must log in as a facility to submit an RFQ.'} <br><br><a class="link-inline" href="#" onclick="go('login');return false">${t('nav_login')}</a></div>`;
+    return;
+  }
+  if(!me.extra || !me.extra.verified){
+    body.innerHTML = `<div class="empty-note">${currentLang==='ar'?'يجب تفعيل حساب منشأتك أولًا قبل نشر مناقصة.':'Your facility must be verified before posting an RFQ.'}<br><br><button class="btn btn-primary" onclick="go('verifyPending')">${currentLang==='ar'?'إكمال التفعيل':'Complete activation'}</button></div>`;
+    return;
+  }
+  body.innerHTML = `
+    <h2 style="margin-bottom:6px;">${t('btn_new_rfq')}</h2>
+    <p style="color:var(--ink-soft); font-size:13.5px; margin-bottom:20px;">${currentLang==='ar'?'سيتم مراجعة طلبك من فريق MedLink قبل النشر.':'Your request will be reviewed by MedLink before publishing.'}</p>
+    <form onsubmit="submitRfq(event)">
+      <div class="field"><label>${currentLang==='ar'?'نوع الطلب':'Request type'}</label>
+        <select id="nrType" onchange="toggleRfqTypeFields()">
+          <option value="staff">${t('rfq_type_staff')}</option>
+          <option value="supply">${t('rfq_type_supply')}</option>
+        </select>
+      </div>
+      <div class="field"><label>${currentLang==='ar'?'عنوان الطلب':'Title'}</label><input required id="nrTitle" type="text" placeholder="${currentLang==='ar'?'مثال: مطلوب استشاري قلب':'e.g. Cardiologist needed'}"></div>
+      <div class="field-row">
+        <div class="field"><label>${t('field_city')}</label><select id="nrCity"></select></div>
+        <div class="field"><label>${currentLang==='ar'?'الموعد النهائي':'Deadline'}</label><input required id="nrDeadline" type="date"></div>
+      </div>
+      <div class="field" id="nrSpecialtyField"><label>${t('field_specialty')}</label><select id="nrSpecialty"></select></div>
+      <div class="field" id="nrQtyField" style="display:none;"><label>${currentLang==='ar'?'الكمية المطلوبة':'Quantity'}</label><input id="nrQty" type="number" min="1"></div>
+      <div class="field"><label>${currentLang==='ar'?'تفاصيل الطلب':'Details'}</label><textarea required id="nrDesc" placeholder="${currentLang==='ar'?'اشرح المواصفات المطلوبة بالتفصيل...':'Describe the requirements...'}"></textarea></div>
+      <div class="field"><label>${currentLang==='ar'?'رقم تواصل للتأكد من الطلب':'Verification phone number'}</label><input required id="nrPhone" type="tel" placeholder="05xxxxxxxx"></div>
+      <p style="font-size:12px; color:var(--ink-faint); margin-bottom:16px;">${currentLang==='ar'?'سيتصل بك فريقنا للتأكد من الطلب قبل نشره لتفادي الإعلانات المضللة.':'Our team will call to verify this request before publishing.'}</p>
+      <button class="btn btn-green btn-block" type="submit" id="rfqSubmitBtn">${currentLang==='ar'?'إرسال للمراجعة':'Submit for review'}</button>
+    </form>`;
+  fillSelect(document.getElementById('nrCity'), SETTINGS.filters.cities, false);
+  fillSelect(document.getElementById('nrSpecialty'), SETTINGS.filters.specialties, false);
+}
+function toggleRfqTypeFields(){
+  const type = document.getElementById('nrType').value;
+  document.getElementById('nrSpecialtyField').style.display = type==='staff'?'block':'none';
+  document.getElementById('nrQtyField').style.display = type==='supply'?'block':'none';
+}
+async function submitRfq(e){
+  e.preventDefault();
+  const btn = document.getElementById('rfqSubmitBtn'); setBtnLoading(btn,true);
+  const type = document.getElementById('nrType').value;
+  const payload = {
+    type, title: document.getElementById('nrTitle').value.trim(),
+    requester_id: me.authUser.id, hospital_name: type==='staff'? me.extra.org_name : null,
+    city: document.getElementById('nrCity').value, description: document.getElementById('nrDesc').value.trim(),
+    deadline: document.getElementById('nrDeadline').value,
+    specialty: type==='staff'? document.getElementById('nrSpecialty').value : null,
+    qty: type==='supply'? Number(document.getElementById('nrQty').value)||1 : null,
+    status:'pending_review', phone_verified:false
+  };
+  const { data: rfq, error } = await sb.from('rfqs').insert(payload).select().single();
+  if(error){ setBtnLoading(btn,false); showToast(error.message); return; }
+  await sb.from('rfq_private').insert({ rfq_id: rfq.id, requester_org_name: me.extra.org_name, requester_phone: document.getElementById('nrPhone').value.trim() });
+  setBtnLoading(btn,false);
+  showToast(currentLang==='ar'?'تم إرسال طلبك، سيتصل بك فريقنا للتأكيد قبل النشر':'Request submitted — our team will call to confirm');
+  go('dashboard');
+}
+
+/* ==========================================================================
+   SUPPLIERS
+========================================================================== */
+function supplierCardHtml(v){
+  return `
+  <div class="gcard">
+    <div class="staff-top">
+      <div class="avatar" style="background:${colorFor(v.profile_id)}; border-radius:12px;">${(v.company||'?')[0]}</div>
+      <div><div class="staff-name">${v.company}</div><div class="staff-role">${v.category||''}</div></div>
+    </div>
+    <p class="staff-bio">${v.services||''}</p>
+    <div class="badge-verified" style="margin-top:12px;">${ICO.check} ${currentLang==='ar'?'مورّد مدرج رسميًا':'Officially listed'}</div>
+  </div>`;
+}
+async function renderSuppliers(){
+  const grid = document.getElementById('suppliersGrid');
+  const { data } = await sb.from('supplier_profiles').select('*').eq('paid', true);
+  grid.innerHTML = (data&&data.length)? data.map(supplierCardHtml).join('') : `<div class="empty-note" style="grid-column:1/-1;">${currentLang==='ar'?'لا يوجد موردون معتمدون بعد':'No verified suppliers yet'}</div>`;
+}
+
+/* ==========================================================================
+   DASHBOARD
+========================================================================== */
+async function renderDashboard(){
+  if(!me){ go('login'); return; }
+  const side = document.getElementById('dashSide');
+  if(me.profile.role==='client'){
+    side.innerHTML = dashSideBtn('overview', currentLang==='ar'?'نظرة عامة':'Overview') + dashSideBtn('rfqs', currentLang==='ar'?'مناقصاتي':'My RFQs') + dashSideBtn('directory', t('nav_staff'));
+  } else if(me.profile.role==='staff'){
+    side.innerHTML = dashSideBtn('overview', currentLang==='ar'?'نظرة عامة':'Overview') + dashSideBtn('notifications', currentLang==='ar'?'الإشعارات':'Notifications') + dashSideBtn('opportunities', currentLang==='ar'?'فرص متاحة':'Opportunities');
+  } else {
+    side.innerHTML = dashSideBtn('overview', currentLang==='ar'?'نظرة عامة':'Overview') + dashSideBtn('listing', currentLang==='ar'?'بيانات ملفي':'My listing') + dashSideBtn('opportunities', currentLang==='ar'?'مناقصات موجهة':'Relevant RFQs');
+  }
+  dashTab = 'overview';
+  await renderDashTab();
+}
+function dashSideBtn(tab,label){ return `<button data-dtab="${tab}" onclick="setDashTab('${tab}')" class="${tab==='overview'?'active':''}">${label}</button>`; }
+let dashTab='overview';
+async function setDashTab(tab){
+  dashTab = tab;
+  document.querySelectorAll('#dashSide button').forEach(b=> b.classList.toggle('active', b.dataset.dtab===tab));
+  await renderDashTab();
+}
+async function renderDashTab(){
+  const body = document.getElementById('dashBody');
+  if(!me) return;
+  body.innerHTML = `<div class="empty-note">…</div>`;
+  if(me.profile.role==='client') return renderDashClient(dashTab, body);
+  if(me.profile.role==='staff') return renderDashStaff(dashTab, body);
+  if(me.profile.role==='supplier') return renderDashSupplier(dashTab, body);
+}
+async function renderDashClient(tab, body){
+  const u = me.extra;
+  if(tab==='overview'){
+    const { data: myRfqs } = await sb.from('rfqs').select('*').eq('requester_id', me.authUser.id);
+    const { count: reqCount } = await sb.from('contact_requests').select('*',{count:'exact',head:true}).eq('client_id', me.authUser.id);
+    body.innerHTML = `
+      <h2 style="margin-bottom:16px;">${u.org_name} ${u.verified? `<span class="badge-verified" style="margin-inline-start:8px;">${ICO.check} ${t('badge_verified')}</span>` : `<span class="badge-unverified" style="margin-inline-start:8px;">${t('badge_unverified')}</span>`}</h2>
+      <div class="stat-row">
+        <div class="stat-card"><b>${(myRfqs||[]).length}</b><span>${currentLang==='ar'?'مناقصات مقدمة':'RFQs submitted'}</span></div>
+        <div class="stat-card"><b>${(myRfqs||[]).filter(r=>r.status==='published').length}</b><span>${currentLang==='ar'?'منشورة حاليًا':'Currently published'}</span></div>
+        <div class="stat-card"><b>${reqCount||0}</b><span>${currentLang==='ar'?'أرقام تم كشفها':'Contacts revealed'}</span></div>
+      </div>
+      ${!u.verified? `<div class="empty-note" style="text-align:start; background:#FEF3E1; border-radius:14px; padding:16px;">${currentLang==='ar'?'حسابك لم يُفعّل بعد. أكمل التفعيل لعرض بيانات الكوادر ونشر المناقصات.':'Your account isn\'t verified yet.'} <a class="link-inline" href="#" onclick="go('verifyPending');return false">${currentLang==='ar'?'إكمال التفعيل':'Complete activation'}</a></div>`:''}
+      <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="go('rfqNew')">${t('btn_new_rfq')}</button>
+        <button class="btn btn-ghost" onclick="go('staffDirectory')">${t('nav_staff')}</button>
+      </div>`;
+  } else if(tab==='rfqs'){
+    const { data: myRfqs } = await sb.from('rfqs').select('*').eq('requester_id', me.authUser.id).order('created_at',{ascending:false});
+    body.innerHTML = `<h3 style="margin-bottom:14px;">${currentLang==='ar'?'مناقصاتي':'My RFQs'}</h3><div class="rfq-list">` +
+      ((myRfqs&&myRfqs.length)? myRfqs.map(r=>`
+        <div class="rfq-card type-${r.type}">
+          <div class="rfq-top"><div><div class="rfq-title">${r.title}</div><div class="rfq-sub">${r.city||''} · ${r.deadline||''}</div></div>
+          <span class="pill ${r.status==='published'?'ok':r.status==='pending_review'?'wait':'no'}">${r.status==='published'? (currentLang==='ar'?'منشورة':'Published') : r.status==='pending_review'? (currentLang==='ar'?'قيد المراجعة':'Under review') : (currentLang==='ar'?'مغلقة':'Closed')}</span></div>
+          <p class="rfq-desc">${r.description||''}</p>
+        </div>`).join('') : `<div class="empty-note">${currentLang==='ar'?'لم تقدّم أي مناقصة بعد':'No RFQs submitted yet'}</div>`) + `</div>`;
+  } else if(tab==='directory'){
+    const { data } = await sb.from('staff_public').select('*').limit(6);
+    body.innerHTML = `<h3 style="margin-bottom:14px;">${t('nav_staff')}</h3><div class="grid-3">` + (data||[]).map(staffCardHtml).join('') + `</div>`;
+  }
+}
+async function clientBadgeHtml(orgName, verified){
+  return verified? `<span class="badge-verified">${ICO.check} ${t('badge_verified')}</span>` : `<span class="badge-unverified">${t('badge_unverified')}</span>`;
+}
+async function renderDashStaff(tab, body){
+  const u = me.extra;
+  if(tab==='overview'){
+    const { count: viewCount } = await sb.from('profile_views').select('*',{count:'exact',head:true}).eq('staff_id', me.authUser.id);
+    const { count: reqCount } = await sb.from('contact_requests').select('*',{count:'exact',head:true}).eq('staff_id', me.authUser.id);
+    body.innerHTML = `
+      <h2 style="margin-bottom:16px;">${u.full_name}</h2>
+      <div class="stat-row">
+        <div class="stat-card"><b>${viewCount||0}</b><span>${currentLang==='ar'?'مشاهدات لملفك':'Profile views'}</span></div>
+        <div class="stat-card"><b>${reqCount||0}</b><span>${currentLang==='ar'?'طلبات تواصل':'Contact requests'}</span></div>
+        <div class="stat-card"><b>${u.experience||0}+</b><span>${currentLang==='ar'?'سنوات خبرة':'Years experience'}</span></div>
+      </div>
+      <div class="gcard" style="max-width:520px;">
+        <h4 style="margin-bottom:10px; font-size:14px;">${currentLang==='ar'?'نبذتك المعروضة':'Your public bio'}</h4>
+        <p style="font-size:13.5px; color:var(--ink-soft);">${u.bio||''}</p>
+      </div>`;
+  } else if(tab==='notifications'){
+    const { data: reqs } = await sb.from('contact_requests').select('*').eq('staff_id', me.authUser.id).order('created_at',{ascending:false});
+    const { data: views } = await sb.from('profile_views').select('*').eq('staff_id', me.authUser.id).order('created_at',{ascending:false});
+    body.innerHTML = `<h3 style="margin-bottom:14px;">${currentLang==='ar'?'الإشعارات':'Notifications'}</h3><div class="gcard">` +
+      ((!reqs||reqs.length===0) && (!views||views.length===0)? `<div class="empty-note">${currentLang==='ar'?'لا توجد إشعارات بعد':'No notifications yet'}</div>` : (
+        (reqs||[]).map(r=>`<div class="notif-row"><div class="notif-left"><div class="ic">${ICO.phone}</div><div><div style="font-weight:800; font-size:13.5px;">${r.client_org_name||''}</div><div style="font-size:12px; color:var(--ink-faint);">${currentLang==='ar'?'طلب رقم تواصلك':'requested your contact'}</div></div></div><div class="notif-time">${timeAgo(r.created_at)}</div></div>`).join('')
+        + (views||[]).map(v=>`<div class="notif-row"><div class="notif-left"><div class="ic">${ICO.eye}</div><div><div style="font-weight:800; font-size:13.5px;">${v.client_org_name||''} ${v.verified?`<span class="badge-verified">${ICO.check} ${t('badge_verified')}</span>`:`<span class="badge-unverified">${t('badge_unverified')}</span>`}</div><div style="font-size:12px; color:var(--ink-faint);">${currentLang==='ar'?'شاهد ملفك الشخصي':'viewed your profile'}</div></div></div><div class="notif-time">${timeAgo(v.created_at)}</div></div>`).join('')
+      )) + `</div>`;
+  } else if(tab==='opportunities'){
+    const { data: opps } = await sb.from('rfqs').select('*').eq('status','published').eq('type','staff').eq('specialty', u.specialty);
+    body.innerHTML = `<h3 style="margin-bottom:14px;">${currentLang==='ar'?'فرص متاحة في تخصصك':'Opportunities in your specialty'}</h3><div class="rfq-list">` +
+      ((opps&&opps.length)? opps.map(r=>`
+        <div class="rfq-card type-staff">
+          <div class="rfq-top"><div><div class="rfq-title">${r.title}</div><div class="rfq-sub">${r.hospital_name||''} · ${r.city||''}</div></div></div>
+          <p class="rfq-desc">${r.description||''}</p>
+          <div class="rfq-meta"><span>📅 ${r.deadline||''}</span></div>
+          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="expressInterest('${r.id}')">${currentLang==='ar'?'أنا مهتم — أخطر الإدارة':'I\'m interested — notify admin'}</button>
+        </div>`).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد فرص مطابقة لتخصصك حاليًا':'No matching opportunities right now'}</div>`) + `</div>`;
+  }
+}
+async function renderDashSupplier(tab, body){
+  const u = me.extra;
+  if(tab==='overview'){
+    const { count: oppCount } = await sb.from('rfqs').select('*',{count:'exact',head:true}).eq('status','published').eq('type','supply');
+    body.innerHTML = `
+      <h2 style="margin-bottom:16px;">${u.company} ${u.paid? `<span class="badge-verified">${ICO.check} ${currentLang==='ar'?'مدرج بالسوق':'Listed'}</span>`:`<span class="badge-unverified">${currentLang==='ar'?'بانتظار الدفع':'Payment pending'}</span>`}</h2>
+      <div class="stat-row"><div class="stat-card"><b>${oppCount||0}</b><span>${currentLang==='ar'?'مناقصات مستلزمات منشورة':'Published supply RFQs'}</span></div></div>
+      ${!u.paid? `<div class="empty-note" style="text-align:start; background:#FEF3E1; border-radius:14px; padding:16px;">${currentLang==='ar'?'أكمل دفع رسوم الإدراج ليظهر ملفك في سوق الموردين.':'Complete the listing fee for your profile to appear in the marketplace.'} <a class="link-inline" href="#" onclick="go('verifyPending');return false">${currentLang==='ar'?'إكمال الدفع':'Complete payment'}</a></div>`:''}
+    `;
+  } else if(tab==='listing'){
+    body.innerHTML = `<div class="gcard" style="max-width:520px;">
+      <h4 style="margin-bottom:10px; font-size:14px;">${currentLang==='ar'?'بيانات ملفك المعروض':'Your listing details'}</h4>
+      <div class="tag-row" style="margin-bottom:10px;"><span class="tag">${u.category||''}</span></div>
+      <p style="font-size:13.5px; color:var(--ink-soft);">${u.services||''}</p>
+      <p style="font-size:12px; color:var(--ink-faint); margin-top:12px;">${currentLang==='ar'?'لتعديل بياناتك تواصل مع فريق MedLink.':'To edit your listing, contact the MedLink team.'}</p>
+    </div>`;
+  } else if(tab==='opportunities'){
+    const { data: opps } = await sb.from('rfqs').select('*').eq('status','published').eq('type','supply');
+    body.innerHTML = `<h3 style="margin-bottom:14px;">${currentLang==='ar'?'مناقصات مستلزمات موجهة':'Relevant supply RFQs'}</h3><div class="rfq-list">` +
+      ((opps&&opps.length)? opps.map(r=>`
+        <div class="rfq-card type-supply">
+          <div class="rfq-top"><div><div class="rfq-title">${r.title}</div><div class="rfq-sub">${currentLang==='ar'?'جهة صحية مسجّلة':'A registered facility'} · ${r.city||''}</div></div></div>
+          <p class="rfq-desc">${r.description||''}</p>
+          <div class="rfq-meta"><span>📅 ${r.deadline||''}</span><span>📦 ${currentLang==='ar'?'الكمية':'Qty'}: ${r.qty||''}</span></div>
+          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="expressInterest('${r.id}')">${currentLang==='ar'?'أنا مهتم — أخطر الإدارة':'I\'m interested — notify admin'}</button>
+        </div>`).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد مناقصات مستلزمات منشورة حاليًا':'No published supply RFQs right now'}</div>`) + `</div>`;
+  }
+}
+async function expressInterest(rfqId){
+  if(!me) return;
+  await sb.from('contact_requests').insert({ rfq_id:rfqId, client_id:me.authUser.id, client_org_name: me.extra?.company||me.extra?.full_name||me.extra?.org_name, is_supplier_interest:true });
+  showToast(currentLang==='ar'?'تم إخطار الإدارة باهتمامك، سيتم التواصل معك':'Admin notified of your interest');
+}
+function timeAgo(ts){
+  const diff = Date.now()-new Date(ts).getTime(); const h = Math.floor(diff/3.6e6);
+  if(h<1) return currentLang==='ar'?'الآن':'now';
+  if(h<24) return `${h} ${currentLang==='ar'?'س':'h'}`;
+  return `${Math.floor(h/24)} ${currentLang==='ar'?'ي':'d'}`;
+}
+
+/* ==========================================================================
+   ADMIN
+========================================================================== */
+async function doAdminLogin(e){
+  e.preventDefault();
+  const btn = document.getElementById('adminSubmitBtn'); setBtnLoading(btn,true);
+  const email = document.getElementById('adminUser').value.trim();
+  const password = document.getElementById('adminPass').value;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if(error){ setBtnLoading(btn,false); showToast(currentLang==='ar'?'بيانات دخول خاطئة':'Wrong credentials'); return; }
+  await refreshMe();
+  setBtnLoading(btn,false);
+  if(!me || me.profile.role!=='admin'){ await sb.auth.signOut(); me=null; showToast(currentLang==='ar'?'هذا الحساب ليس حساب إدارة':'This account is not an admin account'); return; }
+  renderNavAuth();
+  go('admin');
+}
+let adminTab = 'overview';
+const ADMIN_TABS = [['overview','نظرة عامة'],['clients','العملاء'],['staff','الكوادر الطبية'],['suppliers','الموردون'],['rfqs','المناقصات'],['analytics','التحليلات'],['settings','الإعدادات']];
+async function renderAdmin(){
+  if(!me || me.profile.role!=='admin'){ go('adminLogin'); return; }
+  document.getElementById('adminTabs').innerHTML = ADMIN_TABS.map(([k,l])=>`<button class="${k===adminTab?'active':''}" onclick="setAdminTab('${k}')">${l}</button>`).join('');
+  await renderAdminTab();
+}
+function setAdminTab(k){ adminTab=k; renderAdminTab(); }
+async function renderAdminTab(){
+  const body = document.getElementById('adminBody');
+  body.innerHTML = `<div class="empty-note">…</div>`;
+  if(adminTab==='overview') return adminOverview(body);
+  if(adminTab==='clients') return adminClients(body);
+  if(adminTab==='staff') return adminStaff(body);
+  if(adminTab==='suppliers') return adminSuppliers(body);
+  if(adminTab==='rfqs') return adminRfqs(body);
+  if(adminTab==='analytics') return adminAnalytics(body);
+  if(adminTab==='settings') return adminSettings(body);
+}
+async function adminOverview(body){
+  const [{count:clients},{count:staff},{count:suppliers},{count:pendingRfqs},{count:pendingClients},{count:pendingSuppliers}] = await Promise.all([
+    sb.from('client_profiles').select('*',{count:'exact',head:true}),
+    sb.from('staff_public').select('*',{count:'exact',head:true}),
+    sb.from('supplier_profiles').select('*',{count:'exact',head:true}),
+    sb.from('rfqs').select('*',{count:'exact',head:true}).eq('status','pending_review'),
+    sb.from('client_profiles').select('*',{count:'exact',head:true}).eq('status','awaiting_review'),
+    sb.from('supplier_profiles').select('*',{count:'exact',head:true}).eq('status','awaiting_review'),
+  ]);
+  body.innerHTML = `<div class="stat-row">
+    <div class="stat-card"><b>${clients||0}</b><span>إجمالي العملاء</span></div>
+    <div class="stat-card"><b>${staff||0}</b><span>إجمالي الكوادر</span></div>
+    <div class="stat-card"><b>${suppliers||0}</b><span>إجمالي الموردين</span></div>
+    <div class="stat-card"><b>${pendingRfqs||0}</b><span>مناقصات بانتظار المراجعة</span></div>
+    <div class="stat-card"><b>${pendingClients||0}</b><span>عملاء بانتظار التفعيل</span></div>
+    <div class="stat-card"><b>${pendingSuppliers||0}</b><span>موردون بانتظار الدفع</span></div>
+  </div>`;
+}
+async function adminClients(body){
+  const { data } = await sb.from('client_profiles').select('*, profiles(email)').order('created_at',{ascending:false});
+  body.innerHTML = `<div class="table-wrap"><table><thead><tr><th>الجهة</th><th>النوع</th><th>المدينة</th><th>البريد</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>
+    ${(data||[]).map(c=>`<tr><td>${c.org_name}</td><td>${c.org_type||''}</td><td>${c.city||''}</td><td class="ltr-num">${c.profiles?.email||''}</td><td><span class="pill ${c.verified?'ok':c.status==='awaiting_review'?'wait':'no'}">${c.verified?'موثّق':'بانتظار المراجعة'}</span></td>
+    <td>${c.verified? `<button class="btn btn-danger btn-sm" onclick="toggleClientVerify('${c.profile_id}',false)">إلغاء التوثيق</button>` : `<button class="btn btn-green btn-sm" onclick="toggleClientVerify('${c.profile_id}',true)">تفعيل وتوثيق</button>`}</td></tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--ink-faint)">لا يوجد عملاء بعد</td></tr>'}
+  </tbody></table></div>`;
+}
+async function toggleClientVerify(id, val){
+  await sb.from('client_profiles').update({ verified: val, status: val?'active':'awaiting_review' }).eq('profile_id', id);
+  showToast(val?'تم توثيق المنشأة وتفعيل صلاحياتها':'تم إلغاء التوثيق');
+  adminClients(document.getElementById('adminBody'));
+}
+async function adminStaff(body){
+  const { data: pubs } = await sb.from('staff_public').select('*');
+  const { data: privs } = await sb.from('staff_private').select('*');
+  const privMap = {}; (privs||[]).forEach(p=>privMap[p.profile_id]=p);
+  body.innerHTML = `<div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الجوال</th><th>التخصص</th><th>الجنسية</th><th>المدينة</th><th>تواصل</th></tr></thead><tbody>
+    ${(pubs||[]).map(s=>{ const p = privMap[s.profile_id]||{}; return `<tr><td>${p.full_name||'—'}</td><td class="ltr-num">${p.phone||'—'}</td><td>${s.specialty||''}</td><td>${s.nationality||''}</td><td>${s.city||''}</td><td>${p.phone?`<a class="link-inline" href="tel:${p.phone}">اتصال</a>`:''}</td></tr>`; }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--ink-faint)">لا يوجد كوادر بعد</td></tr>'}
+  </tbody></table></div>`;
+}
+async function adminSuppliers(body){
+  const { data } = await sb.from('supplier_profiles').select('*, profiles(email)').order('created_at',{ascending:false});
+  body.innerHTML = `<div class="table-wrap"><table><thead><tr><th>الشركة</th><th>الفئة</th><th>البريد</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>
+    ${(data||[]).map(v=>`<tr><td>${v.company}</td><td>${v.category||''}</td><td class="ltr-num">${v.profiles?.email||''}</td><td><span class="pill ${v.paid?'ok':'wait'}">${v.paid?'مدرج ومدفوع':'بانتظار الدفع'}</span></td>
+    <td>${v.paid? `<button class="btn btn-danger btn-sm" onclick="toggleSupplierPaid('${v.profile_id}',false)">إلغاء الإدراج</button>`:`<button class="btn btn-green btn-sm" onclick="toggleSupplierPaid('${v.profile_id}',true)">تأكيد الدفع وإدراج</button>`}</td></tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint)">لا يوجد موردون بعد</td></tr>'}
+  </tbody></table></div>`;
+}
+async function toggleSupplierPaid(id,val){
+  await sb.from('supplier_profiles').update({ paid: val, status: val?'active':'awaiting_review' }).eq('profile_id', id);
+  showToast(val?'تم تفعيل إدراج المورد':'تم إلغاء الإدراج');
+  adminSuppliers(document.getElementById('adminBody'));
+}
+async function adminRfqs(body){
+  const { data: pending } = await sb.from('rfqs').select('*, rfq_private(*)').eq('status','pending_review');
+  const { data: published } = await sb.from('rfqs').select('*, rfq_private(*)').eq('status','published');
+  body.innerHTML = `
+    <h4 style="margin-bottom:10px;">قيد المراجعة (${(pending||[]).length})</h4>
+    <div class="table-wrap" style="margin-bottom:24px;"><table><thead><tr><th>العنوان</th><th>النوع</th><th>الجهة</th><th>هاتف التحقق</th><th>تأكيد هاتفي</th><th>إجراء</th></tr></thead><tbody>
+    ${(pending||[]).map(r=>`<tr><td>${r.title}</td><td>${r.type==='staff'?'كوادر':'مستلزمات'}</td><td>${r.rfq_private?.requester_org_name||''}</td><td class="ltr-num">${r.rfq_private?.requester_phone||''}</td>
+      <td><input type="checkbox" ${r.phone_verified?'checked':''} onchange="setRfqPhoneVerified('${r.id}', this.checked)"></td>
+      <td><button class="btn btn-green btn-sm" ${r.phone_verified?'':'disabled'} onclick="publishRfq('${r.id}')">نشر</button> <button class="btn btn-danger btn-sm" onclick="rejectRfq('${r.id}')">رفض</button></td></tr>`).join('') || '<tr><td colspan="6" style="text-align:center; color:var(--ink-faint);">لا توجد طلبات قيد المراجعة</td></tr>'}
+    </tbody></table></div>
+    <h4 style="margin-bottom:10px;">منشورة (${(published||[]).length})</h4>
+    <div class="table-wrap"><table><thead><tr><th>العنوان</th><th>النوع</th><th>الجهة</th><th>إجراء</th></tr></thead><tbody>
+    ${(published||[]).map(r=>`<tr><td>${r.title}</td><td>${r.type==='staff'?'كوادر':'مستلزمات'}</td><td>${r.rfq_private?.requester_org_name||''}</td><td><button class="btn btn-ghost btn-sm" onclick="unpublishRfq('${r.id}')">إلغاء النشر</button></td></tr>`).join('') || '<tr><td colspan="4" style="text-align:center; color:var(--ink-faint);">لا توجد مناقصات منشورة</td></tr>'}
+    </tbody></table></div>`;
+}
+async function setRfqPhoneVerified(id, val){ await sb.from('rfqs').update({phone_verified:val}).eq('id',id); adminRfqs(document.getElementById('adminBody')); }
+async function publishRfq(id){ await sb.from('rfqs').update({status:'published'}).eq('id',id); showToast('تم نشر المناقصة'); adminRfqs(document.getElementById('adminBody')); }
+async function rejectRfq(id){ await sb.from('rfqs').update({status:'rejected'}).eq('id',id); adminRfqs(document.getElementById('adminBody')); }
+async function unpublishRfq(id){ await sb.from('rfqs').update({status:'closed'}).eq('id',id); adminRfqs(document.getElementById('adminBody')); }
+async function adminAnalytics(body){
+  const { data: cr } = await sb.from('contact_requests').select('*').order('created_at',{ascending:false}).limit(100);
+  body.innerHTML = `
+    <h4 style="margin-bottom:10px;">سجل طلبات كشف التواصل / الاهتمامات</h4>
+    <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الجهة</th><th>النوع</th></tr></thead><tbody>
+    ${(cr||[]).map(r=>`<tr><td>${new Date(r.created_at).toLocaleString('ar-SA')}</td><td>${r.client_org_name||''}</td><td>${r.is_supplier_interest?'اهتمام بفرصة':'طلب رقم كادر'}</td></tr>`).join('') || '<tr><td colspan="3" style="text-align:center; color:var(--ink-faint);">لا يوجد سجل بعد</td></tr>'}
+    </tbody></table></div>`;
+}
+async function adminSettings(body){
+  const s = SETTINGS;
+  body.innerHTML = `
+    <div class="gcard" style="max-width:640px; margin-bottom:18px;">
+      <h4 style="margin-bottom:12px;">بيانات التواصل</h4>
+      <div class="field"><label>البريد</label><input id="setEmail" value="${s.contact_email||''}"></div>
+      <div class="field"><label>الجوال</label><input id="setPhone" value="${s.contact_phone||''}"></div>
+      <div class="field-row">
+        <div class="field"><label>X/Twitter</label><input id="setTw" value="${s.social?.twitter||''}"></div>
+        <div class="field"><label>LinkedIn</label><input id="setLi" value="${s.social?.linkedin||''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Instagram</label><input id="setIg" value="${s.social?.instagram||''}"></div>
+        <div class="field"><label>YouTube</label><input id="setYt" value="${s.social?.youtube||''}"></div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="saveContactSettings()">حفظ</button>
+    </div>
+    <div class="gcard" style="max-width:640px; margin-bottom:18px;">
+      <h4 style="margin-bottom:12px;">شركاء النجاح</h4>
+      <div class="settings-list" id="partnersListEl">${(s.partners||[]).map((p,i)=>`<div class="settings-item"><span>${p}</span><button class="small-x" onclick="removePartner(${i})">✕</button></div>`).join('')}</div>
+      <div style="display:flex; gap:8px;"><input id="newPartner" placeholder="اسم الشريك" style="flex:1; border:1.5px solid var(--line); border-radius:10px; padding:9px 12px;"><button class="btn btn-primary btn-sm" onclick="addPartner()">إضافة</button></div>
+    </div>
+    <div class="gcard" style="max-width:640px;">
+      <h4 style="margin-bottom:12px;">إدارة الفلاتر</h4>
+      ${filterManagerHtml('specialties','التخصصات')}
+      ${filterManagerHtml('nationalities','الجنسيات')}
+      ${filterManagerHtml('cities','المدن')}
+    </div>`;
+}
+function filterManagerHtml(key,label){
+  const items = SETTINGS.filters[key]||[];
+  return `<div style="margin-bottom:16px;"><b style="font-size:13px;">${label}</b>
+    <div class="settings-list" style="margin-top:8px;">${items.map((v,i)=>`<div class="settings-item"><span>${v}</span><button class="small-x" onclick="removeFilterItem('${key}',${i})">✕</button></div>`).join('')}</div>
+    <div style="display:flex; gap:8px;"><input id="new_${key}" placeholder="إضافة عنصر جديد" style="flex:1; border:1.5px solid var(--line); border-radius:10px; padding:9px 12px;"><button class="btn btn-ghost btn-sm" onclick="addFilterItem('${key}')">إضافة</button></div>
+  </div>`;
+}
+async function saveFilters(){ await sb.from('settings').update({ filters: SETTINGS.filters }).eq('id',1); renderStaticOptions(); }
+async function addFilterItem(key){
+  const input = document.getElementById('new_'+key); const val = input.value.trim();
+  if(!val) return;
+  SETTINGS.filters[key].push(val); await saveFilters(); adminSettings(document.getElementById('adminBody'));
+}
+async function removeFilterItem(key,i){ SETTINGS.filters[key].splice(i,1); await saveFilters(); adminSettings(document.getElementById('adminBody')); }
+async function addPartner(){ const v=document.getElementById('newPartner').value.trim(); if(!v) return; SETTINGS.partners.push(v); await sb.from('settings').update({partners:SETTINGS.partners}).eq('id',1); adminSettings(document.getElementById('adminBody')); }
+async function removePartner(i){ SETTINGS.partners.splice(i,1); await sb.from('settings').update({partners:SETTINGS.partners}).eq('id',1); adminSettings(document.getElementById('adminBody')); }
+async function saveContactSettings(){
+  SETTINGS.contact_email = document.getElementById('setEmail').value.trim();
+  SETTINGS.contact_phone = document.getElementById('setPhone').value.trim();
+  SETTINGS.social = { twitter:document.getElementById('setTw').value.trim(), linkedin:document.getElementById('setLi').value.trim(), instagram:document.getElementById('setIg').value.trim(), youtube:document.getElementById('setYt').value.trim() };
+  await sb.from('settings').update({ contact_email:SETTINGS.contact_email, contact_phone:SETTINGS.contact_phone, social:SETTINGS.social }).eq('id',1);
+  showToast('تم الحفظ'); renderFooterDynamic();
+}
+
+/* ==========================================================================
+   TOAST
+========================================================================== */
+let toastTimer;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  el.classList.add('show'); clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove('show'), 3200);
+}
+
+/* ==========================================================================
+   REVEAL ON SCROLL
+========================================================================== */
+const io = new IntersectionObserver(entries=>{ entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } }); }, {threshold:.1});
+
+/* ==========================================================================
+   INIT
+========================================================================== */
+async function init(){
+  setRegRole('client');
+  await loadSettings();
+  await refreshMe();
+  renderNavAuth();
+  applyLang();
+  go('home');
+}
+init();
+</script>
+</body>
+</html>
