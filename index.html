@@ -621,13 +621,26 @@ footer .flinks a:hover{ color:var(--indigo); }
       <h2 style="margin-bottom:6px;">دخول الإدارة</h2>
       <p style="color:var(--ink-soft); font-size:13px; margin-bottom:20px;">لوحة تحكم فريق MedLink فقط.</p>
       <form onsubmit="doAdminLogin(event)">
-        <div class="field"><label>البريد الإلكتروني</label><input required id="adminUser" type="email" placeholder="admin@medlink.sa"></div>
-        <div class="field"><label>كلمة المرور</label><input required id="adminPass" type="password" placeholder="••••••••"></div>
+        <div class="field"><label>كلمة المرور</label><input required id="adminPass" type="password" placeholder="••••••••" autofocus></div>
         <button class="btn btn-primary btn-block" type="submit" id="adminSubmitBtn">دخول لوحة التحكم</button>
       </form>
-      <div style="margin-top:16px; background:var(--bg); border-radius:12px; padding:12px; font-size:11.5px; color:var(--ink-faint);">
-        بيانات تجريبية: <b class="ltr-num">admin@medlink.sa</b> / <b class="ltr-num">MedLinkAdmin2026!</b>
-      </div>
+      <p style="margin-top:14px; text-align:center;">
+        <a href="#" class="link-inline" onclick="sendAdminPasswordReset();return false" style="font-size:12.5px;">نسيت كلمة المرور؟</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADMIN PASSWORD RESET (landing from email link) ============ -->
+<section class="view" id="view-adminResetPassword" data-view>
+  <div class="wrap" style="padding:70px 0; display:flex; justify-content:center;">
+    <div class="card-form">
+      <h2 style="margin-bottom:6px;">تعيين كلمة مرور جديدة</h2>
+      <p style="color:var(--ink-soft); font-size:13px; margin-bottom:20px;">اكتب كلمة المرور الجديدة لحساب الإدارة.</p>
+      <form onsubmit="submitAdminPasswordReset(event)">
+        <div class="field"><label>كلمة المرور الجديدة (٦ أحرف على الأقل)</label><input required id="newAdminPass" type="password" minlength="6" placeholder="••••••••"></div>
+        <button class="btn btn-primary btn-block" type="submit" id="resetPassSubmitBtn">حفظ كلمة المرور</button>
+      </form>
     </div>
   </div>
 </section>
@@ -681,6 +694,10 @@ footer .flinks a:hover{ color:var(--indigo); }
 const SUPABASE_URL = 'https://aizxzrozfwyaooogmnaj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpenh6cm96Znd5YW9vb2dtbmFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTQzMDEsImV4cCI6MjA5OTE5MDMwMX0.JAjqJ0OfuHZZxfT0tbAjdfkwA8I7Rm87yezc4uUaAQA';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const ADMIN_EMAIL = 'medlinkplatform@gmail.com';
+sb.auth.onAuthStateChange((event)=>{
+  if(event === 'PASSWORD_RECOVERY'){ go('adminResetPassword'); }
+});
 
 /* ==========================================================================
    LANGUAGES + I18N  (unchanged UI chrome dictionary)
@@ -1417,15 +1434,39 @@ function timeAgo(ts){
 async function doAdminLogin(e){
   e.preventDefault();
   const btn = document.getElementById('adminSubmitBtn'); setBtnLoading(btn,true);
-  const email = document.getElementById('adminUser').value.trim();
   const password = document.getElementById('adminPass').value;
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  if(error){ setBtnLoading(btn,false); showToast(currentLang==='ar'?'بيانات دخول خاطئة':'Wrong credentials'); return; }
+  const { error } = await sb.auth.signInWithPassword({ email: ADMIN_EMAIL, password });
+  if(error){ setBtnLoading(btn,false); showToast(currentLang==='ar'?'كلمة المرور غير صحيحة':'Incorrect password'); return; }
   await refreshMe();
   setBtnLoading(btn,false);
   if(!me || me.profile.role!=='admin'){ await sb.auth.signOut(); me=null; showToast(currentLang==='ar'?'هذا الحساب ليس حساب إدارة':'This account is not an admin account'); return; }
   renderNavAuth();
   go('admin');
+}
+async function sendAdminPasswordReset(){
+  const { error } = await sb.auth.resetPasswordForEmail(ADMIN_EMAIL, { redirectTo: window.location.href.split('#')[0] });
+  if(error){ showToast(error.message); return; }
+  showToast(currentLang==='ar'?`تم إرسال رابط تعيين كلمة مرور جديدة إلى ${ADMIN_EMAIL}`:`Password reset link sent to ${ADMIN_EMAIL}`);
+}
+async function submitAdminPasswordReset(e){
+  e.preventDefault();
+  const btn = document.getElementById('resetPassSubmitBtn'); setBtnLoading(btn,true);
+  const newPassword = document.getElementById('newAdminPass').value;
+  const { error } = await sb.auth.updateUser({ password: newPassword });
+  setBtnLoading(btn,false);
+  if(error){ showToast(error.message); return; }
+  showToast(currentLang==='ar'?'تم تحديث كلمة المرور بنجاح':'Password updated successfully');
+  await refreshMe();
+  renderNavAuth();
+  if(me && me.profile.role==='admin'){ go('admin'); } else { go('adminLogin'); }
+}
+async function changeAdminPasswordFromSettings(){
+  const val = document.getElementById('settingsNewPass').value;
+  if(!val || val.length<6){ showToast(currentLang==='ar'?'كلمة المرور يجب أن تكون ٦ أحرف على الأقل':'Password must be at least 6 characters'); return; }
+  const { error } = await sb.auth.updateUser({ password: val });
+  if(error){ showToast(error.message); return; }
+  document.getElementById('settingsNewPass').value = '';
+  showToast(currentLang==='ar'?'تم تغيير كلمة المرور بنجاح':'Password changed successfully');
 }
 let adminTab = 'applications';
 const ADMIN_TABS = [['applications','الطلبات الجديدة'],['overview','نظرة عامة'],['clients','العملاء'],['staff','الكوادر الطبية'],['suppliers','الموردون'],['rfqs','المناقصات'],['analytics','التحليلات'],['settings','الإعدادات']];
@@ -1777,20 +1818,26 @@ function initHeroStarfield(){
 initHeroStarfield();
 
 /* ==========================================================================
-   LOGO ASSEMBLE/FLUTTER — periodic "breathing" reassembly for a living feel
+   LOGO INTERACTIVE TILT — the real logo image tilts toward the pointer,
+   on top of its continuous heartbeat pulse + float animation
 ========================================================================== */
-function initLogoFlutter(){
-  const pieces = document.querySelectorAll('#logoIdle .piece');
-  if(!pieces.length) return;
-  setInterval(()=>{
-    pieces.forEach(p=>{
-      p.classList.remove('flutter');
-      void p.offsetWidth; // restart animation
-      p.classList.add('flutter');
-    });
-  }, 9000);
+function initLogoTilt(){
+  const stage = document.getElementById('logoStage');
+  const tilt = document.getElementById('logoTilt');
+  if(!stage || !tilt) return;
+  function setTilt(clientX, clientY){
+    const r = stage.getBoundingClientRect();
+    const x = (clientX - r.left)/r.width - 0.5;
+    const y = (clientY - r.top)/r.height - 0.5;
+    tilt.style.transform = `rotateY(${x*16}deg) rotateX(${-y*16}deg)`;
+  }
+  function reset(){ tilt.style.transform = 'rotateY(0deg) rotateX(0deg)'; }
+  stage.addEventListener('mousemove', e=> setTilt(e.clientX, e.clientY));
+  stage.addEventListener('mouseleave', reset);
+  stage.addEventListener('touchmove', e=>{ if(e.touches[0]) setTilt(e.touches[0].clientX, e.touches[0].clientY); }, {passive:true});
+  stage.addEventListener('touchend', reset);
 }
-initLogoFlutter();
+initLogoTilt();
 
 /* ==========================================================================
    INIT
