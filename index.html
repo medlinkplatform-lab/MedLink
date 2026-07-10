@@ -439,9 +439,6 @@ footer .flinks a:hover{ color:var(--indigo); }
         <span data-i18n="login_no_account">ليس لديك حساب؟</span>
         <a href="#" class="link-inline" onclick="go('register');return false" data-i18n="nav_register">إنشاء حساب</a>
       </p>
-      <div style="margin-top:18px; background:var(--bg); border-radius:12px; padding:12px; font-size:11.5px; color:var(--ink-faint);">
-        بيانات تجريبية: <b class="ltr-num">hospital1@demo.com</b> / <b class="ltr-num">demo123</b> (منشأة موثقة) — <b class="ltr-num">staff1@demo.com</b> / <b class="ltr-num">demo123</b> (كادر). حسابات المنشآت والكوادر تُنشأ من الإدارة بعد التحقق — لا يوجد تسجيل ذاتي.
-      </div>
     </div>
   </div>
 </section>
@@ -1859,11 +1856,27 @@ async function adminAnalytics(body){
 }
 async function adminSettings(body){
   const s = SETTINGS;
+  const ov = s.stats_override || {};
+  const [{count:realStaff},{count:realRfq},{count:realSupplier}] = await Promise.all([
+    sb.from('staff_public').select('*',{count:'exact',head:true}),
+    sb.from('rfqs').select('*',{count:'exact',head:true}).eq('status','published'),
+    sb.from('supplier_listings').select('*',{count:'exact',head:true}).eq('paid', true),
+  ]);
   body.innerHTML = `
     <div class="gcard" style="max-width:640px; margin-bottom:18px;">
       <h4 style="margin-bottom:12px;">تغيير كلمة مرور الإدارة</h4>
       <div class="field"><label>كلمة المرور الجديدة (٦ أحرف على الأقل)</label><input id="settingsNewPass" type="password" placeholder="••••••••"></div>
       <button class="btn btn-primary btn-sm" onclick="changeAdminPasswordFromSettings()">حفظ كلمة المرور الجديدة</button>
+    </div>
+    <div class="gcard" style="max-width:640px; margin-bottom:18px;">
+      <h4 style="margin-bottom:12px;">إحصائيات الصفحة الرئيسية</h4>
+      <p style="font-size:12px; color:var(--ink-faint); margin-bottom:14px;">اترك الحقل فاضي لعرض الرقم الحقيقي تلقائيًا، أو اكتب رقم مخصص لعرضه بدل الرقم الحقيقي.</p>
+      <div class="field-row">
+        <div class="field"><label>كادر طبي مسجّل (الحقيقي: ${realStaff??0})</label><input id="ovStaff" type="number" placeholder="تلقائي" value="${ov.staffCount ?? ''}"></div>
+        <div class="field"><label>مناقصة منشورة (الحقيقي: ${realRfq??0})</label><input id="ovRfq" type="number" placeholder="تلقائي" value="${ov.rfqCount ?? ''}"></div>
+      </div>
+      <div class="field"><label>مورّد معتمد (الحقيقي: ${realSupplier??0})</label><input id="ovSupplier" type="number" placeholder="تلقائي" value="${ov.supplierCount ?? ''}"></div>
+      <button class="btn btn-primary btn-sm" onclick="saveStatsOverride()">حفظ الإحصائيات</button>
     </div>
     <div class="gcard" style="max-width:640px; margin-bottom:18px;">
       <h4 style="margin-bottom:12px;">بيانات التواصل</h4>
@@ -1932,6 +1945,13 @@ async function addPartner(){
   adminSettings(document.getElementById('adminBody'));
 }
 async function removePartner(i){ SETTINGS.partners.splice(i,1); await sb.from('settings').update({partners:SETTINGS.partners}).eq('id',1); adminSettings(document.getElementById('adminBody')); }
+async function saveStatsOverride(){
+  const readVal = (id)=>{ const v = document.getElementById(id).value; return v===''? null : Number(v); };
+  const ov = { staffCount: readVal('ovStaff'), rfqCount: readVal('ovRfq'), supplierCount: readVal('ovSupplier') };
+  SETTINGS.stats_override = ov;
+  await sb.from('settings').update({ stats_override: ov }).eq('id',1);
+  showToast('تم حفظ الإحصائيات');
+}
 async function saveContactSettings(){
   SETTINGS.contact_email = document.getElementById('setEmail').value.trim();
   SETTINGS.contact_phone = document.getElementById('setPhone').value.trim();
