@@ -3,7 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MedLink — سوق الخدمات الطبية</title>
+<title>MedLink — سوق الخدمات الطبية | توظيف كوادر طبية ومناقصات مستلزمات صحية</title>
+<meta name="description" content="MedLink سوق طبي سعودي يربط المستشفيات والعيادات بالكوادر الطبية المؤهلة، ويدير مناقصات الأجهزة والمستلزمات مع موردين معتمدين — بخصوصية كاملة وتوثيق موثوق لكل طرف.">
+<meta name="keywords" content="توظيف طبي, كوادر طبية, مناقصات طبية, RFQ طبي, موردين طبيين, سوق طبي السعودية, medical staffing, healthcare RFQ marketplace, medical suppliers Saudi Arabia">
+<meta name="author" content="MedLink">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://medlinkplatform-lab.github.io/MedLink/">
+<link rel="icon" type="image/png" href="assets/logo.PNG">
+<link rel="apple-touch-icon" href="assets/logo.PNG">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MedLink">
+<meta property="og:title" content="MedLink — سوق طبي واحد لتوظيف الكوادر وإدارة المناقصات">
+<meta property="og:description" content="يربط المنشآت الصحية بالكوادر الطبية المؤهلة، ويدير مناقصات الأجهزة والخدمات مع الموردين — بخصوصية كاملة وتوثيق موثوق لكل طرف.">
+<meta property="og:image" content="https://medlinkplatform-lab.github.io/MedLink/assets/logo.PNG">
+<meta property="og:url" content="https://medlinkplatform-lab.github.io/MedLink/">
+<meta property="og:locale" content="ar_SA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MedLink — سوق طبي واحد لتوظيف الكوادر وإدارة المناقصات">
+<meta name="twitter:description" content="يربط المنشآت الصحية بالكوادر الطبية المؤهلة، ويدير مناقصات الأجهزة والخدمات مع الموردين.">
+<meta name="twitter:image" content="https://medlinkplatform-lab.github.io/MedLink/assets/logo.PNG">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "MedLink",
+  "url": "https://medlinkplatform-lab.github.io/MedLink/",
+  "logo": "https://medlinkplatform-lab.github.io/MedLink/assets/logo.PNG",
+  "description": "سوق طبي يربط المنشآت الصحية بالكوادر الطبية المؤهلة ويدير مناقصات الأجهزة والخدمات مع الموردين.",
+  "areaServed": "SA"
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -42,7 +73,7 @@ input,select,textarea{font-family:inherit;}
 .nav{ position:sticky; top:0; z-index:300; background:rgba(246,247,252,.78); backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }
 .nav-inner{ max-width:1280px; margin:0 auto; padding:12px 32px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .nav-brand{ display:flex; align-items:center; gap:10px; cursor:pointer; }
-.nav-brand img{ height:34px; }
+.nav-brand img{ height:50px; width:auto; }
 .nav-links{ display:flex; gap:4px; align-items:center; }
 .nav-links a{ font-size:14px; font-weight:700; color:var(--ink-soft); padding:9px 14px; border-radius:99px; transition:.2s; white-space:nowrap; }
 .nav-links a:hover, .nav-links a.active{ background:var(--indigo-pale); color:var(--indigo); }
@@ -111,9 +142,20 @@ section{ padding:64px 0; }
 @keyframes medFloat{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-16px) rotate(4deg); } }
 @keyframes medTwinkle{ 0%,100%{ opacity:.22; } 50%{ opacity:.7; } }
 
-.logo-stage{ position:relative; z-index:2; max-width:400px; margin:0 auto; aspect-ratio:1/1; background:radial-gradient(circle at 50% 40%, #fff 0%, var(--indigo-pale-2) 70%, transparent 100%); border-radius:32px; display:flex; align-items:center; justify-content:center; box-shadow:0 30px 80px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06); }
-.logo-stage img{ width:76%; filter:drop-shadow(0 20px 40px rgba(26,35,126,.18)); animation:floatY 5s ease-in-out infinite; }
-@keyframes floatY{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+.logo-stage{ position:relative; z-index:2; max-width:400px; margin:0 auto; aspect-ratio:1/1; background:radial-gradient(circle at 50% 40%, #fff 0%, var(--indigo-pale-2) 70%, transparent 100%); border-radius:32px; display:flex; align-items:center; justify-content:center; box-shadow:0 30px 80px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06); overflow:hidden; perspective:900px; }
+.logo-glow{ position:absolute; width:60%; height:60%; border-radius:50%; background:radial-gradient(circle, rgba(52,199,89,.35) 0%, rgba(18,166,160,.16) 45%, transparent 75%); animation:glowPulse 2.6s ease-in-out infinite; pointer-events:none; }
+@keyframes glowPulse{ 0%,100%{ opacity:.5; transform:scale(.92); } 8%{ opacity:.9; transform:scale(1.08); } 16%{ opacity:.55; transform:scale(.97); } 24%{ opacity:.8; transform:scale(1.04); } 32%{ opacity:.5; transform:scale(.92); } }
+.logo-tilt{ position:relative; width:76%; transform-style:preserve-3d; transition:transform .18s ease-out; will-change:transform; }
+.logo-real{ width:100%; display:block; filter:drop-shadow(0 20px 40px rgba(26,35,126,.22)); animation:floatY 5s ease-in-out infinite, heartbeatPulse 2.6s ease-in-out infinite; }
+@keyframes heartbeatPulse{
+  0%{ transform:scale(1); }
+  8%{ transform:scale(1.06); }
+  16%{ transform:scale(1); }
+  24%{ transform:scale(1.035); }
+  32%{ transform:scale(1); }
+  100%{ transform:scale(1); }
+}
+@keyframes floatY{ 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-10px) scale(1);} }
 .stage-badge{ position:absolute; bottom:16px; inset-inline-start:16px; background:var(--ink); color:#fff; font-size:11.5px; font-weight:700; padding:8px 13px; border-radius:99px; display:flex; align-items:center; gap:7px; box-shadow:var(--shadow-md); }
 .stage-badge .dot{ width:7px; height:7px; border-radius:50%; background:#4ADE80; animation:pulseDot 1.6s infinite; }
 .admin-live-dot{ display:inline-flex; align-items:center; gap:7px; background:var(--indigo-pale); color:var(--indigo); font-size:12px; font-weight:800; padding:6px 12px; border-radius:99px; }
@@ -252,6 +294,12 @@ footer .flinks a:hover{ color:var(--indigo); }
 </style>
 </head>
 <body>
+<noscript>
+  <div style="max-width:640px; margin:60px auto; padding:24px; font-family:sans-serif; line-height:1.8; text-align:center;">
+    <h1>MedLink — سوق طبي واحد لتوظيف الكوادر وإدارة المناقصات</h1>
+    <p>MedLink سوق طبي سعودي يربط المستشفيات والعيادات بالكوادر الطبية المؤهلة، ويدير مناقصات الأجهزة والمستلزمات مع موردين معتمدين، بخصوصية كاملة وتوثيق موثوق لكل طرف. يرجى تفعيل JavaScript لتصفح المنصة.</p>
+  </div>
+</noscript>
 
 <div class="aurora"><span></span><span></span><span></span></div>
 
@@ -319,8 +367,11 @@ footer .flinks a:hover{ color:var(--indigo); }
         <div class="stat"><b id="statSupplierCount">—</b><span data-i18n="hero_stat_suppliers">مورّد معتمد</span></div>
       </div>
     </div>
-    <div class="logo-stage">
-      <img src="assets/logo.PNG" alt="MedLink">
+    <div class="logo-stage" id="logoStage">
+      <div class="logo-glow"></div>
+      <div class="logo-tilt" id="logoTilt">
+        <img class="logo-real" src="assets/logo.PNG" alt="MedLink">
+      </div>
     </div>
   </div>
  </header>
@@ -371,7 +422,7 @@ footer .flinks a:hover{ color:var(--indigo); }
         <a href="#" class="link-inline" onclick="go('register');return false" data-i18n="nav_register">إنشاء حساب</a>
       </p>
       <div style="margin-top:18px; background:var(--bg); border-radius:12px; padding:12px; font-size:11.5px; color:var(--ink-faint);">
-        بيانات تجريبية: <b class="ltr-num">hospital1@demo.com</b> / <b class="ltr-num">demo123</b> (منشأة موثقة) — <b class="ltr-num">staff1@demo.com</b> / <b class="ltr-num">demo123</b> (كادر) — <b class="ltr-num">supplier1@demo.com</b> / <b class="ltr-num">demo123</b> (مورد)
+        بيانات تجريبية: <b class="ltr-num">hospital1@demo.com</b> / <b class="ltr-num">demo123</b> (منشأة موثقة) — <b class="ltr-num">staff1@demo.com</b> / <b class="ltr-num">demo123</b> (كادر). حسابات المنشآت والكوادر تُنشأ من الإدارة بعد التحقق — لا يوجد تسجيل ذاتي.
       </div>
     </div>
   </div>
@@ -381,8 +432,8 @@ footer .flinks a:hover{ color:var(--indigo); }
 <section class="view" id="view-register" data-view>
   <div class="wrap" style="padding:50px 0; display:flex; justify-content:center;">
     <div class="card-form wide">
-      <h2 style="margin-bottom:6px;" data-i18n="register_title">إنشاء حساب جديد</h2>
-      <p style="color:var(--ink-soft); font-size:13.5px; margin-bottom:20px;" data-i18n="register_sub">اختر نوع الحساب المناسب لك.</p>
+      <h2 style="margin-bottom:6px;" data-i18n="register_title">تقديم طلب انضمام</h2>
+      <p style="color:var(--ink-soft); font-size:13.5px; margin-bottom:20px;" data-i18n="register_sub">اختر نوع الحساب المناسب لك — سيراجع فريقنا طلبك ويتواصل معك خلال وقت قصير.</p>
       <div class="role-tabs">
         <button class="active" id="tabClient" onclick="setRegRole('client')" data-i18n="register_role_client">منشأة / عميل</button>
         <button id="tabStaff" onclick="setRegRole('staff')" data-i18n="register_role_staff">كادر طبي</button>
@@ -392,7 +443,7 @@ footer .flinks a:hover{ color:var(--indigo); }
       <form id="registerForm" onsubmit="submitRegister(event)">
         <div id="fieldsClient">
           <div class="field-row">
-            <div class="field"><label data-i18n="field_orgname">اسم الجهة</label><input id="regOrgName" type="text" data-i18n-placeholder="ph_orgname" placeholder="مستشفى / مستوصف / عيادة"></div>
+            <div class="field"><label data-i18n="field_orgname">اسم الجهة</label><input required id="regOrgName" type="text" data-i18n-placeholder="ph_orgname" placeholder="مستشفى / مستوصف / عيادة"></div>
             <div class="field"><label data-i18n="field_orgtype">نوع الجهة</label>
               <select id="regOrgType"></select>
             </div>
@@ -400,6 +451,10 @@ footer .flinks a:hover{ color:var(--indigo); }
           <div class="field"><label data-i18n="field_city">المدينة</label><select id="regCity"></select></div>
           <div class="field"><label data-i18n="field_branches">الفروع (اختياري)</label><div id="branchList"></div>
             <button type="button" class="btn btn-ghost btn-sm" onclick="addBranchRow()" data-i18n="field_add_branch">+ إضافة فرع</button>
+          </div>
+          <div class="field-row">
+            <div class="field"><label data-i18n="field_email">البريد الإلكتروني</label><input required id="regClientEmail" type="email" placeholder="you@example.com"></div>
+            <div class="field"><label data-i18n="field_phone">رقم الجوال</label><input required id="regClientPhone" type="tel" placeholder="05xxxxxxxx"></div>
           </div>
         </div>
 
@@ -420,21 +475,23 @@ footer .flinks a:hover{ color:var(--indigo); }
             <div class="field"><label data-i18n="field_experience">سنوات الخبرة</label><input id="regExperience" type="number" min="0" placeholder="5"></div>
           </div>
           <div class="field"><label data-i18n="field_bio">نبذة تعريفية (تظهر للعامة)</label><textarea id="regBio" data-i18n-placeholder="ph_bio" placeholder="اكتب نبذة مختصرة عن خبراتك ومجالات اهتمامك..."></textarea></div>
+          <div class="field"><label data-i18n="field_email">البريد الإلكتروني</label><input required id="regStaffEmail" type="email" placeholder="you@example.com"></div>
         </div>
 
         <div id="fieldsSupplier" style="display:none;">
           <div class="field"><label data-i18n="field_company">اسم الشركة</label><input id="regCompany" type="text" data-i18n-placeholder="ph_company" placeholder="اسم شركتك"></div>
+          <div class="field-row">
+            <div class="field"><label data-i18n="field_contactname">اسم المسؤول عن التواصل</label><input id="regContactName" type="text"></div>
+            <div class="field"><label data-i18n="field_phone">رقم الجوال</label><input required id="regSupplierPhone" type="tel" placeholder="05xxxxxxxx"></div>
+          </div>
           <div class="field"><label data-i18n="field_category">فئة النشاط</label>
             <select id="regCategory"></select>
           </div>
           <div class="field"><label data-i18n="field_services">وصف الخدمات/المنتجات</label><textarea id="regServices" data-i18n-placeholder="ph_services" placeholder="صف نشاطك التجاري باختصار..."></textarea></div>
+          <div class="field"><label data-i18n="field_email">البريد الإلكتروني</label><input required id="regSupplierEmail" type="email" placeholder="you@example.com"></div>
         </div>
 
-        <div class="field-row">
-          <div class="field"><label data-i18n="field_email">البريد الإلكتروني</label><input required id="regEmail" type="email" placeholder="you@example.com"></div>
-          <div class="field"><label data-i18n="field_password">كلمة المرور (٦ أحرف على الأقل)</label><input required id="regPassword" type="password" minlength="6" placeholder="••••••••"></div>
-        </div>
-        <button class="btn btn-green btn-block" type="submit" id="registerSubmitBtn" data-i18n="register_submit">إنشاء الحساب</button>
+        <button class="btn btn-green btn-block" type="submit" id="registerSubmitBtn" data-i18n="register_submit">إرسال الطلب</button>
       </form>
       <p style="margin-top:16px; font-size:13px; color:var(--ink-soft); text-align:center;">
         <span data-i18n="register_have_account">لديك حساب؟</span>
@@ -444,7 +501,19 @@ footer .flinks a:hover{ color:var(--indigo); }
   </div>
 </section>
 
-<!-- ============ VERIFY PENDING ============ -->
+<!-- ============ APPLICATION SUBMITTED ============ -->
+<section class="view" id="view-applicationSubmitted" data-view>
+  <div class="wrap" style="padding:70px 0;">
+    <div class="verify-box">
+      <div class="icon-circle"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg></div>
+      <h2 data-i18n="app_submitted_title">تم استلام طلبك بنجاح</h2>
+      <p style="color:var(--ink-soft); margin-top:8px; font-size:14px;" data-i18n="app_submitted_note">سيراجع فريق MedLink طلبك ويتواصل معك هاتفيًا للتأكد من بياناتك. بعد التأكيد، ستصلك بيانات الدخول (البريد وكلمة المرور) مباشرة.</p>
+      <button class="btn btn-primary btn-block" style="margin-top:18px;" onclick="go('home')" data-i18n="app_submitted_back">العودة للرئيسية</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VERIFY PENDING (post-login, client payment step) ============ -->
 <section class="view" id="view-verifyPending" data-view>
   <div class="wrap" style="padding:60px 0;">
     <div class="verify-box">
@@ -462,6 +531,7 @@ footer .flinks a:hover{ color:var(--indigo); }
     </div>
   </div>
 </section>
+
 
 <!-- ============ STAFF DIRECTORY ============ -->
 <section class="view" id="view-staffDirectory" data-view>
@@ -671,12 +741,16 @@ const TR = {
  field_password:['كلمة المرور','Password','Пароль','Passwort','パスワード','비밀번호','密码','Contraseña','Password','Senha','Mot de passe','پاس ورڈ'],
  login_submit:['دخول','Log in','Войти','Anmelden','ログイン','로그인','登录','Entrar','Accedi','Entrar','Se connecter','لاگ ان کریں'],
  login_no_account:['ليس لديك حساب؟','No account yet?','Нет аккаунта?','Noch kein Konto?','アカウントをお持ちでない方','계정이 없으신가요?','还没有账户？','¿No tienes cuenta?','Non hai un account?','Ainda não tem conta?','Pas encore de compte ?','ابھی تک اکاؤنٹ نہیں؟'],
- register_title:['إنشاء حساب جديد','Create an account','Создать аккаунт','Konto erstellen','アカウント作成','계정 만들기','创建账户','Crear una cuenta','Crea un account','Criar uma conta','Créer un compte','اکاؤنٹ بنائیں'],
- register_sub:['اختر نوع الحساب المناسب لك.','Choose the account type that fits you.','Выберите подходящий тип аккаунта.','Wählen Sie den passenden Kontotyp.','あなたに合ったアカウント種別を選択。','적합한 계정 유형을 선택하세요.','选择适合您的账户类型。','Elige el tipo de cuenta adecuado.','Scegli il tipo di account adatto.','Escolha o tipo de conta ideal.','Choisissez le type de compte adapté.','اپنے لیے موزوں اکاؤنٹ کی قسم منتخب کریں۔'],
+ register_title:['تقديم طلب انضمام','Submit a join request','Отправить заявку','Antrag einreichen','参加申請を送信','가입 신청서 제출','提交加入申请','Enviar solicitud de registro','Invia richiesta di adesione','Enviar solicitação','Soumettre une demande','شمولیت کی درخواست دیں'],
+ register_sub:['اختر نوع الحساب المناسب لك — سيراجع فريقنا طلبك ويتواصل معك خلال وقت قصير.','Choose the account type that fits you — our team will review and contact you shortly.','Выберите тип аккаунта — наша команда свяжется с вами.','Wählen Sie den passenden Kontotyp — wir melden uns in Kürze.','適したアカウント種別を選択してください。担当者よりご連絡します。','적합한 계정 유형을 선택하세요. 곧 연락드리겠습니다.','选择适合您的账户类型，我们的团队将尽快与您联系。','Elige el tipo de cuenta — nuestro equipo te contactará pronto.','Scegli il tipo di account — il nostro team ti contatterà presto.','Escolha o tipo de conta — nossa equipe entrará em contato em breve.','Choisissez le type de compte — notre équipe vous contactera bientôt.','اکاؤنٹ کی قسم منتخب کریں — ہماری ٹیم جلد رابطہ کرے گی۔'],
+ field_contactname:['اسم المسؤول عن التواصل','Contact person name','Контактное лицо','Ansprechpartner','担当者名','담당자명','联系人姓名','Nombre del contacto','Nome del referente','Nome do contato','Nom du contact','رابطہ کار کا نام'],
+ register_submit:['إرسال الطلب','Submit request','Отправить заявку','Antrag senden','申請を送信','신청서 제출','提交申请','Enviar solicitud','Invia richiesta','Enviar solicitação','Envoyer la demande','درخواست بھیجیں'],
+ app_submitted_title:['تم استلام طلبك بنجاح','Your request has been received','Ваша заявка получена','Ihr Antrag wurde erhalten','お申し込みを受け付けました','신청이 접수되었습니다','您的申请已收到','Tu solicitud ha sido recibida','La tua richiesta è stata ricevuta','Sua solicitação foi recebida','Votre demande a été reçue','آپ کی درخواست موصول ہوگئی'],
+ app_submitted_note:['سيراجع فريق MedLink طلبك ويتواصل معك هاتفيًا للتأكد من بياناتك. بعد التأكيد، ستصلك بيانات الدخول (البريد وكلمة المرور) مباشرة.','Our team will review your request and call to verify your details. Once confirmed, you\'ll receive your login credentials directly.','Наша команда рассмотрит заявку и свяжется с вами по телефону для подтверждения данных.','Unser Team prüft Ihren Antrag und ruft Sie zur Bestätigung an.','担当チームが内容を確認のうえ、お電話でご連絡いたします。確認後、ログイン情報をお送りします。','저희 팀이 신청 내용을 검토하고 확인 전화를 드립니다. 확인 후 로그인 정보를 보내드립니다.','我们的团队将审核您的申请并致电确认信息，确认后将直接发送登录凭证。','Nuestro equipo revisará tu solicitud y te llamará para confirmar tus datos.','Il nostro team esaminerà la tua richiesta e ti chiamerà per confermare i dati.','Nossa equipe analisará sua solicitação e ligará para confirmar seus dados.','Notre équipe examinera votre demande et vous appellera pour confirmer vos informations.','ہماری ٹیم آپ کی درخواست کا جائزہ لے کر تصدیق کے لیے کال کرے گی۔'],
+ app_submitted_back:['العودة للرئيسية','Back to home','Вернуться на главную','Zurück zur Startseite','ホームに戻る','홈으로 돌아가기','返回首页','Volver al inicio','Torna alla home','Voltar ao início','Retour à l\'accueil','ہوم پیج پر واپس جائیں'],
  register_role_client:['منشأة / عميل','Facility / Client','Учреждение','Einrichtung','施設・クライアント','기관/고객','机构/客户','Instalación/Cliente','Struttura/Cliente','Instituição/Cliente','Établissement/Client','ادارہ/کلائنٹ'],
  register_role_staff:['كادر طبي','Medical staff','Медперсонал','Fachkraft','医療スタッフ','의료진','医护人员','Personal médico','Personale medico','Profissional médico','Personnel médical','طبی عملہ'],
  register_role_supplier:['مورّد','Supplier','Поставщик','Lieferant','サプライヤー','공급업체','供应商','Proveedor','Fornitore','Fornecedor','Fournisseur','سپلائر'],
- register_submit:['إنشاء الحساب','Create account','Создать аккаунт','Konto erstellen','アカウント作成','계정 생성','创建账户','Crear cuenta','Crea account','Criar conta','Créer le compte','اکاؤنٹ بنائیں'],
  register_have_account:['لديك حساب؟','Already have an account?','Уже есть аккаунт?','Bereits ein Konto?','アカウントをお持ちの方','이미 계정이 있으신가요?','已有账户？','¿Ya tienes cuenta?','Hai già un account?','Já tem uma conta?','Vous avez déjà un compte ?','پہلے سے اکاؤنٹ ہے؟'],
  field_orgname:['اسم الجهة','Facility name','Название учреждения','Name der Einrichtung','施設名','기관명','机构名称','Nombre de la instalación','Nome della struttura','Nome da instituição','Nom de l\'établissement','ادارے کا نام'],
  field_orgtype:['نوع الجهة','Facility type','Тип учреждения','Art der Einrichtung','施設種別','기관 유형','机构类型','Tipo de instalación','Tipo di struttura','Tipo de instituição','Type d\'établissement','ادارے کی قسم'],
@@ -865,54 +939,42 @@ function setBtnLoading(btn, loading){
 async function submitRegister(e){
   e.preventDefault();
   const btn = document.getElementById('registerSubmitBtn'); setBtnLoading(btn,true);
-  const email = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value;
-
-  const { data, error } = await sb.auth.signUp({ email, password, options:{ data:{ role: regRole } } });
-  if(error){ setBtnLoading(btn,false); showToast(error.message); return; }
-  const newUser = data.user;
-  const hasSession = !!data.session;
-
-  // If email confirmation is required, we still write the profile row now so it's ready once confirmed —
-  // but RLS insert policies require the user to be authenticated as themselves, so this only fully succeeds
-  // once a session exists (immediate if email confirmation is disabled on the project).
-  if(hasSession){
-    await sb.auth.setSession(data.session);
-    try{
-      if(regRole==='client'){
-        const branches = Array.from(document.querySelectorAll('#branchList input')).map(i=>i.value).filter(Boolean);
-        await sb.from('client_profiles').insert({
-          profile_id:newUser.id, org_name: document.getElementById('regOrgName').value.trim()||'منشأة صحية',
-          org_type: document.getElementById('regOrgType').value, city: document.getElementById('regCity').value, branches
-        });
-      } else if(regRole==='staff'){
-        await sb.from('staff_public').insert({
-          profile_id:newUser.id, specialty: document.getElementById('regSpecialty').value, nationality: document.getElementById('regNationality').value,
-          city: document.getElementById('regCity2').value, gender: document.getElementById('regGender').value,
-          experience: Number(document.getElementById('regExperience').value)||0, bio: document.getElementById('regBio').value.trim()||'—'
-        });
-        await sb.from('staff_private').insert({
-          profile_id:newUser.id, full_name: document.getElementById('regFullName').value.trim()||'كادر طبي',
-          phone: document.getElementById('regPhone').value.trim()
-        });
-      } else {
-        await sb.from('supplier_profiles').insert({
-          profile_id:newUser.id, company: document.getElementById('regCompany').value.trim()||'شركة مورّد',
-          category: document.getElementById('regCategory').value, services: document.getElementById('regServices').value.trim()
-        });
-      }
-    } catch(err){ console.error(err); }
-    await refreshMe();
-    renderNavAuth();
-    setBtnLoading(btn,false);
+  try{
+    if(regRole==='client'){
+      const branches = Array.from(document.querySelectorAll('#branchList input')).map(i=>i.value).filter(Boolean);
+      const { error } = await sb.from('client_applications').insert({
+        org_name: document.getElementById('regOrgName').value.trim()||'منشأة صحية',
+        org_type: document.getElementById('regOrgType').value, city: document.getElementById('regCity').value, branches,
+        contact_email: document.getElementById('regClientEmail').value.trim(),
+        contact_phone: document.getElementById('regClientPhone').value.trim()
+      });
+      if(error) throw error;
+    } else if(regRole==='staff'){
+      const { error } = await sb.from('staff_applications').insert({
+        full_name: document.getElementById('regFullName').value.trim()||'كادر طبي',
+        phone: document.getElementById('regPhone').value.trim(),
+        email: document.getElementById('regStaffEmail').value.trim(),
+        gender: document.getElementById('regGender').value, specialty: document.getElementById('regSpecialty').value,
+        nationality: document.getElementById('regNationality').value, city: document.getElementById('regCity2').value,
+        experience: Number(document.getElementById('regExperience').value)||0, bio: document.getElementById('regBio').value.trim()||'—'
+      });
+      if(error) throw error;
+    } else {
+      const { error } = await sb.from('supplier_requests').insert({
+        company: document.getElementById('regCompany').value.trim()||'شركة مورّد',
+        contact_name: document.getElementById('regContactName').value.trim(),
+        phone: document.getElementById('regSupplierPhone').value.trim(),
+        email: document.getElementById('regSupplierEmail').value.trim(),
+        category: document.getElementById('regCategory').value, services: document.getElementById('regServices').value.trim()
+      });
+      if(error) throw error;
+    }
     document.getElementById('registerForm').reset();
-    if(regRole==='staff'){ showToast(currentLang==='ar'?'تم إنشاء ملفك بنجاح':'Profile created'); go('dashboard'); }
-    else { go('verifyPending'); }
-  } else {
+    go('applicationSubmitted');
+  } catch(err){
+    showToast(err.message || (currentLang==='ar'?'حدث خطأ، حاول مجددًا':'Something went wrong, try again'));
+  } finally {
     setBtnLoading(btn,false);
-    document.getElementById('registerForm').reset();
-    showToast(currentLang==='ar'?'راجع بريدك لتأكيد الحساب، ثم سجّل الدخول لإكمال ملفك.':'Check your email to confirm your account, then log in to finish your profile.');
-    go('login');
   }
 }
 function markTransferred(){
@@ -965,7 +1027,7 @@ async function renderHome(){
   const [{count:staffCount}, {count:rfqCount}, {count:supplierCount}] = await Promise.all([
     sb.from('staff_public').select('*', {count:'exact', head:true}),
     sb.from('rfqs').select('*', {count:'exact', head:true}).eq('status','published'),
-    sb.from('supplier_profiles').select('*', {count:'exact', head:true}).eq('paid', true),
+    sb.from('supplier_listings').select('*', {count:'exact', head:true}).eq('paid', true),
   ]);
   document.getElementById('statStaffCount').textContent = staffCount ?? '0';
   document.getElementById('statRfqCount').textContent = rfqCount ?? '0';
@@ -1195,7 +1257,7 @@ function supplierCardHtml(v){
   return `
   <div class="gcard">
     <div class="staff-top">
-      <div class="avatar" style="background:${colorFor(v.profile_id)}; border-radius:12px;">${(v.company||'?')[0]}</div>
+      <div class="avatar" style="background:${colorFor(v.id)}; border-radius:12px;">${(v.company||'?')[0]}</div>
       <div><div class="staff-name">${v.company}</div><div class="staff-role">${v.category||''}</div></div>
     </div>
     <p class="staff-bio">${v.services||''}</p>
@@ -1204,7 +1266,7 @@ function supplierCardHtml(v){
 }
 async function renderSuppliers(){
   const grid = document.getElementById('suppliersGrid');
-  const { data } = await sb.from('supplier_profiles').select('*').eq('paid', true);
+  const { data } = await sb.from('supplier_listings').select('*').eq('paid', true).order('created_at',{ascending:false});
   grid.innerHTML = (data&&data.length)? data.map(supplierCardHtml).join('') : `<div class="empty-note" style="grid-column:1/-1;">${currentLang==='ar'?'لا يوجد موردون معتمدون بعد':'No verified suppliers yet'}</div>`;
 }
 
@@ -1365,8 +1427,8 @@ async function doAdminLogin(e){
   renderNavAuth();
   go('admin');
 }
-let adminTab = 'overview';
-const ADMIN_TABS = [['overview','نظرة عامة'],['clients','العملاء'],['staff','الكوادر الطبية'],['suppliers','الموردون'],['rfqs','المناقصات'],['analytics','التحليلات'],['settings','الإعدادات']];
+let adminTab = 'applications';
+const ADMIN_TABS = [['applications','الطلبات الجديدة'],['overview','نظرة عامة'],['clients','العملاء'],['staff','الكوادر الطبية'],['suppliers','الموردون'],['rfqs','المناقصات'],['analytics','التحليلات'],['settings','الإعدادات']];
 async function renderAdmin(){
   if(!me || me.profile.role!=='admin'){ go('adminLogin'); return; }
   document.getElementById('adminTabs').innerHTML = ADMIN_TABS.map(([k,l])=>`<button class="${k===adminTab?'active':''}" onclick="setAdminTab('${k}')">${l}</button>`).join('');
@@ -1376,6 +1438,7 @@ function setAdminTab(k){ adminTab=k; renderAdminTab(); }
 async function renderAdminTab(){
   const body = document.getElementById('adminBody');
   body.innerHTML = `<div class="empty-note">…</div>`;
+  if(adminTab==='applications') return adminApplications(body);
   if(adminTab==='overview') return adminOverview(body);
   if(adminTab==='clients') return adminClients(body);
   if(adminTab==='staff') return adminStaff(body);
@@ -1385,22 +1448,146 @@ async function renderAdminTab(){
   if(adminTab==='settings') return adminSettings(body);
 }
 async function adminOverview(body){
-  const [{count:clients},{count:staff},{count:suppliers},{count:pendingRfqs},{count:pendingClients},{count:pendingSuppliers}] = await Promise.all([
+  const [{count:clients},{count:staff},{count:supplierListings},{count:pendingRfqs},{count:pendingClients},{count:pendingStaff},{count:pendingSuppliers}] = await Promise.all([
     sb.from('client_profiles').select('*',{count:'exact',head:true}),
     sb.from('staff_public').select('*',{count:'exact',head:true}),
-    sb.from('supplier_profiles').select('*',{count:'exact',head:true}),
+    sb.from('supplier_listings').select('*',{count:'exact',head:true}).eq('paid', true),
     sb.from('rfqs').select('*',{count:'exact',head:true}).eq('status','pending_review'),
-    sb.from('client_profiles').select('*',{count:'exact',head:true}).eq('status','awaiting_review'),
-    sb.from('supplier_profiles').select('*',{count:'exact',head:true}).eq('status','awaiting_review'),
+    sb.from('client_applications').select('*',{count:'exact',head:true}).eq('status','pending'),
+    sb.from('staff_applications').select('*',{count:'exact',head:true}).eq('status','pending'),
+    sb.from('supplier_requests').select('*',{count:'exact',head:true}).eq('status','pending'),
   ]);
   body.innerHTML = `<div class="stat-row">
     <div class="stat-card"><b>${clients||0}</b><span>إجمالي العملاء</span></div>
     <div class="stat-card"><b>${staff||0}</b><span>إجمالي الكوادر</span></div>
-    <div class="stat-card"><b>${suppliers||0}</b><span>إجمالي الموردين</span></div>
+    <div class="stat-card"><b>${supplierListings||0}</b><span>موردون مدرجون بالسوق</span></div>
     <div class="stat-card"><b>${pendingRfqs||0}</b><span>مناقصات بانتظار المراجعة</span></div>
-    <div class="stat-card"><b>${pendingClients||0}</b><span>عملاء بانتظار التفعيل</span></div>
-    <div class="stat-card"><b>${pendingSuppliers||0}</b><span>موردون بانتظار الدفع</span></div>
+    <div class="stat-card"><b>${(pendingClients||0)+(pendingStaff||0)+(pendingSuppliers||0)}</b><span>طلبات جديدة بانتظار الرد</span></div>
   </div>`;
+}
+
+/* ==========================================================================
+   ADMIN: APPLICATIONS (client/staff account requests + supplier join requests)
+========================================================================== */
+function genPassword(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+  let out=''; for(let i=0;i<10;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+async function adminApplications(body){
+  const [{data:clientApps},{data:staffApps},{data:supplierReqs}] = await Promise.all([
+    sb.from('client_applications').select('*').eq('status','pending').order('created_at',{ascending:false}),
+    sb.from('staff_applications').select('*').eq('status','pending').order('created_at',{ascending:false}),
+    sb.from('supplier_requests').select('*').eq('status','pending').order('created_at',{ascending:false}),
+  ]);
+  body.innerHTML = `
+    <h4 style="margin-bottom:10px;">طلبات المنشآت (${(clientApps||[]).length})</h4>
+    <div class="table-wrap" style="margin-bottom:24px;"><table><thead><tr><th>الجهة</th><th>النوع</th><th>المدينة</th><th>البريد</th><th>الجوال</th><th>إجراء</th></tr></thead><tbody>
+    ${(clientApps||[]).map(a=>`<tr><td>${a.org_name}</td><td>${a.org_type||''}</td><td>${a.city||''}</td><td class="ltr-num">${a.contact_email}</td><td class="ltr-num">${a.contact_phone}</td>
+      <td><button class="btn btn-green btn-sm" onclick="openApproveModal('client','${a.id}')">قبول وإنشاء حساب</button> <button class="btn btn-danger btn-sm" onclick="rejectApplication('client_applications','${a.id}')">رفض</button></td></tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--ink-faint)">لا توجد طلبات جديدة</td></tr>'}
+    </tbody></table></div>
+
+    <h4 style="margin-bottom:10px;">طلبات الكوادر الطبية (${(staffApps||[]).length})</h4>
+    <div class="table-wrap" style="margin-bottom:24px;"><table><thead><tr><th>الاسم</th><th>التخصص</th><th>الجوال</th><th>البريد</th><th>إجراء</th></tr></thead><tbody>
+    ${(staffApps||[]).map(a=>`<tr><td>${a.full_name}</td><td>${a.specialty||''}</td><td class="ltr-num">${a.phone}</td><td class="ltr-num">${a.email}</td>
+      <td><button class="btn btn-green btn-sm" onclick="openApproveModal('staff','${a.id}')">قبول وإنشاء حساب</button> <button class="btn btn-danger btn-sm" onclick="rejectApplication('staff_applications','${a.id}')">رفض</button></td></tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint)">لا توجد طلبات جديدة</td></tr>'}
+    </tbody></table></div>
+
+    <h4 style="margin-bottom:10px;">طلبات انضمام الموردين (${(supplierReqs||[]).length})</h4>
+    <div class="table-wrap"><table><thead><tr><th>الشركة</th><th>الفئة</th><th>الجوال</th><th>البريد</th><th>إجراء</th></tr></thead><tbody>
+    ${(supplierReqs||[]).map(a=>`<tr><td>${a.company}</td><td>${a.category||''}</td><td class="ltr-num">${a.phone}</td><td class="ltr-num">${a.email}</td>
+      <td><button class="btn btn-green btn-sm" onclick="openSupplierListingModal('${a.id}')">تحويل لعرض بالسوق</button> <button class="btn btn-danger btn-sm" onclick="rejectApplication('supplier_requests','${a.id}')">رفض</button></td></tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint)">لا توجد طلبات جديدة</td></tr>'}
+    </tbody></table></div>`;
+}
+async function rejectApplication(table, id){
+  await sb.from(table).update({status:'rejected'}).eq('id', id);
+  showToast('تم رفض الطلب');
+  adminApplications(document.getElementById('adminBody'));
+}
+function openApproveModal(type, applicationId){
+  const overlay = document.getElementById('genericModalOverlay');
+  document.getElementById('genericModalTitle').textContent = type==='client'? 'قبول طلب المنشأة وإنشاء حساب' : 'قبول طلب الكادر وإنشاء حساب';
+  document.getElementById('genericModalBody').innerHTML = `
+    <div class="field"><label>البريد الإلكتروني (لتسجيل الدخول)</label><input id="apvEmail" type="email"></div>
+    <div class="field"><label>كلمة المرور</label>
+      <div style="display:flex; gap:8px;">
+        <input id="apvPassword" type="text" style="flex:1;">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('apvPassword').value=genPassword()">توليد</button>
+      </div>
+    </div>
+    <div id="apvResult" style="display:none; background:#E7F9EE; border-radius:12px; padding:12px; font-size:13px; margin-bottom:14px;"></div>
+    <button class="btn btn-green btn-block" id="apvSubmitBtn" onclick="approveApplication('${type}','${applicationId}')">إنشاء الحساب الآن</button>
+  `;
+  overlay.classList.add('show');
+  // prefill email + password
+  (async()=>{
+    const table = type==='client' ? 'client_applications' : 'staff_applications';
+    const { data } = await sb.from(table).select('*').eq('id', applicationId).single();
+    document.getElementById('apvEmail').value = type==='client' ? (data?.contact_email||'') : (data?.email||'');
+    document.getElementById('apvPassword').value = genPassword();
+    window._apvData = data;
+  })();
+}
+async function approveApplication(type, applicationId){
+  const btn = document.getElementById('apvSubmitBtn'); setBtnLoading(btn,true);
+  const email = document.getElementById('apvEmail').value.trim();
+  const password = document.getElementById('apvPassword').value.trim();
+  const a = window._apvData || {};
+  const extra = type==='client'
+    ? { org_name:a.org_name, org_type:a.org_type, city:a.city, branches:a.branches }
+    : { full_name:a.full_name, phone:a.phone, gender:a.gender, specialty:a.specialty, nationality:a.nationality, city:a.city, experience:a.experience, bio:a.bio };
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-account`, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${session.access_token}` },
+      body: JSON.stringify({ type, email, password, applicationId, extra })
+    });
+    const out = await res.json();
+    if(!res.ok) throw new Error(out.error || 'فشل إنشاء الحساب');
+    document.getElementById('apvResult').style.display='block';
+    document.getElementById('apvResult').innerHTML = `<b>تم إنشاء الحساب ✓</b><br>البريد: <span class="ltr-num">${email}</span><br>كلمة المرور: <span class="ltr-num">${password}</span><br><span style="color:var(--ink-faint)">انسخ البيانات وأرسلها للعميل/الكادر مباشرة.</span>`;
+    setBtnLoading(btn,false);
+    btn.style.display='none';
+    adminApplications(document.getElementById('adminBody'));
+  } catch(err){
+    setBtnLoading(btn,false);
+    showToast(err.message);
+  }
+}
+function openSupplierListingModal(requestId){
+  const overlay = document.getElementById('genericModalOverlay');
+  document.getElementById('genericModalTitle').textContent = requestId? 'إضافة كعرض بسوق الموردين' : 'إضافة مورد يدويًا';
+  document.getElementById('genericModalBody').innerHTML = `
+    <div class="field"><label>اسم الشركة</label><input id="slCompany" type="text"></div>
+    <div class="field"><label>فئة النشاط</label><select id="slCategory"></select></div>
+    <div class="field"><label>وصف الخدمات</label><textarea id="slServices"></textarea></div>
+    <button class="btn btn-green btn-block" onclick="createSupplierListing(${requestId?`'${requestId}'`:'null'})">${requestId?'إضافة للسوق الآن':'إضافة المورد'}</button>
+  `;
+  overlay.classList.add('show');
+  fillSelect(document.getElementById('slCategory'), SETTINGS.filters.categories, false);
+  if(requestId){
+    (async()=>{
+      const { data } = await sb.from('supplier_requests').select('*').eq('id', requestId).single();
+      if(data){
+        document.getElementById('slCompany').value = data.company||'';
+        document.getElementById('slServices').value = data.services||'';
+        if(data.category) document.getElementById('slCategory').value = data.category;
+      }
+    })();
+  }
+}
+async function createSupplierListing(requestId){
+  const company = document.getElementById('slCompany').value.trim();
+  const category = document.getElementById('slCategory').value;
+  const services = document.getElementById('slServices').value.trim();
+  const { error } = await sb.from('supplier_listings').insert({ company, category, services, paid:true });
+  if(error){ showToast(error.message); return; }
+  if(requestId) await sb.from('supplier_requests').update({status:'approved'}).eq('id', requestId);
+  closeModal('genericModalOverlay');
+  showToast('تمت إضافة المورد للسوق');
+  adminApplications(document.getElementById('adminBody'));
+  if(adminTab==='suppliers') adminSuppliers(document.getElementById('adminBody'));
 }
 async function adminClients(body){
   const { data } = await sb.from('client_profiles').select('*, profiles(email)').order('created_at',{ascending:false});
@@ -1423,15 +1610,23 @@ async function adminStaff(body){
   </tbody></table></div>`;
 }
 async function adminSuppliers(body){
-  const { data } = await sb.from('supplier_profiles').select('*, profiles(email)').order('created_at',{ascending:false});
-  body.innerHTML = `<div class="table-wrap"><table><thead><tr><th>الشركة</th><th>الفئة</th><th>البريد</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>
-    ${(data||[]).map(v=>`<tr><td>${v.company}</td><td>${v.category||''}</td><td class="ltr-num">${v.profiles?.email||''}</td><td><span class="pill ${v.paid?'ok':'wait'}">${v.paid?'مدرج ومدفوع':'بانتظار الدفع'}</span></td>
-    <td>${v.paid? `<button class="btn btn-danger btn-sm" onclick="toggleSupplierPaid('${v.profile_id}',false)">إلغاء الإدراج</button>`:`<button class="btn btn-green btn-sm" onclick="toggleSupplierPaid('${v.profile_id}',true)">تأكيد الدفع وإدراج</button>`}</td></tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint)">لا يوجد موردون بعد</td></tr>'}
+  const { data } = await sb.from('supplier_listings').select('*').order('created_at',{ascending:false});
+  body.innerHTML = `
+    <div style="margin-bottom:16px;"><button class="btn btn-primary btn-sm" onclick="openSupplierListingModal(null)">+ إضافة مورد يدويًا</button></div>
+    <div class="table-wrap"><table><thead><tr><th>الشركة</th><th>الفئة</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>
+    ${(data||[]).map(v=>`<tr><td>${v.company}</td><td>${v.category||''}</td><td><span class="pill ${v.paid?'ok':'no'}">${v.paid?'ظاهر بالسوق':'مخفي'}</span></td>
+    <td>${v.paid? `<button class="btn btn-danger btn-sm" onclick="toggleListingPaid('${v.id}',false)">إخفاء</button>`:`<button class="btn btn-green btn-sm" onclick="toggleListingPaid('${v.id}',true)">إظهار بالسوق</button>`}
+    <button class="btn btn-ghost btn-sm" onclick="deleteListing('${v.id}')">حذف</button></td></tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--ink-faint)">لا يوجد موردون مدرجون بعد</td></tr>'}
   </tbody></table></div>`;
 }
-async function toggleSupplierPaid(id,val){
-  await sb.from('supplier_profiles').update({ paid: val, status: val?'active':'awaiting_review' }).eq('profile_id', id);
-  showToast(val?'تم تفعيل إدراج المورد':'تم إلغاء الإدراج');
+async function toggleListingPaid(id,val){
+  await sb.from('supplier_listings').update({ paid: val }).eq('id', id);
+  showToast(val?'المورد ظاهر بالسوق الآن':'تم إخفاء المورد');
+  adminSuppliers(document.getElementById('adminBody'));
+}
+async function deleteListing(id){
+  await sb.from('supplier_listings').delete().eq('id', id);
+  showToast('تم حذف المورد');
   adminSuppliers(document.getElementById('adminBody'));
 }
 async function adminRfqs(body){
@@ -1580,6 +1775,22 @@ function initHeroStarfield(){
   requestAnimationFrame(frame);
 }
 initHeroStarfield();
+
+/* ==========================================================================
+   LOGO ASSEMBLE/FLUTTER — periodic "breathing" reassembly for a living feel
+========================================================================== */
+function initLogoFlutter(){
+  const pieces = document.querySelectorAll('#logoIdle .piece');
+  if(!pieces.length) return;
+  setInterval(()=>{
+    pieces.forEach(p=>{
+      p.classList.remove('flutter');
+      void p.offsetWidth; // restart animation
+      p.classList.add('flutter');
+    });
+  }, 9000);
+}
+initLogoFlutter();
 
 /* ==========================================================================
    INIT
