@@ -90,6 +90,14 @@ input,select,textarea{font-family:inherit;}
 .btn:disabled{ opacity:.5; cursor:not-allowed; transform:none !important; }
 .nav-right{ display:flex; align-items:center; gap:10px; }
 @media(max-width:1024px){ .nav-links{display:none;} }
+.hamburger-btn{ display:none; width:38px; height:38px; border-radius:10px; align-items:center; justify-content:center; color:var(--ink); background:var(--surface); border:1.5px solid var(--line); flex-shrink:0; }
+@media(max-width:1024px){ .hamburger-btn{ display:flex; } }
+.mobile-menu{ display:none; flex-direction:column; max-width:1280px; margin:0 auto; padding:0 32px; overflow:hidden; max-height:0; transition:max-height .25s ease, padding .25s ease; }
+.mobile-menu.open{ max-height:320px; padding:6px 32px 14px; }
+@media(max-width:1024px){ .mobile-menu{ display:flex; } }
+.mobile-menu a{ padding:12px 6px; font-size:14.5px; font-weight:700; color:var(--ink-soft); border-top:1px solid var(--line); }
+.mobile-menu a:hover{ color:var(--indigo); }
+@media(max-width:640px){ .mobile-menu{ padding-left:18px; padding-right:18px; } .mobile-menu.open{ padding:6px 18px 14px; } }
 
 .lang-switch{ position:relative; }
 .lang-btn{ display:flex; align-items:center; gap:6px; background:var(--surface); border:1.5px solid var(--line); border-radius:99px; padding:8px 13px; font-size:12.5px; font-weight:800; color:var(--ink-soft); }
@@ -321,7 +329,16 @@ footer .flinks a:hover{ color:var(--indigo); }
         <div class="lang-menu" id="langMenu"></div>
       </div>
       <div id="navAuthArea"></div>
+      <button class="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
     </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#" onclick="go('home');closeMobileMenu();return false" data-i18n="nav_home">الرئيسية</a>
+    <a href="#" onclick="go('staffDirectory');closeMobileMenu();return false" data-i18n="nav_staff">الكوادر الطبية</a>
+    <a href="#" onclick="go('rfqFeed');closeMobileMenu();return false" data-i18n="nav_rfq">المناقصات</a>
+    <a href="#" onclick="go('suppliers');closeMobileMenu();return false" data-i18n="nav_suppliers">الموردون</a>
   </div>
 </nav>
 
@@ -360,6 +377,7 @@ footer .flinks a:hover{ color:var(--indigo); }
       <div class="hero-ctas">
         <button class="btn btn-primary" onclick="go('staffDirectory')" data-i18n="hero_cta1">استعرض الكوادر الطبية</button>
         <button class="btn btn-ghost" onclick="go('rfqFeed')" data-i18n="hero_cta2">تصفح المناقصات</button>
+        <button class="btn btn-ghost" onclick="go('suppliers')" data-i18n="hero_cta3">استعراض الموردين</button>
       </div>
       <div class="hero-stats">
         <div class="stat"><b id="statStaffCount">—</b><span data-i18n="hero_stat_staff">كادر طبي مسجّل</span></div>
@@ -722,6 +740,7 @@ const TR = {
  hero_lead:['MedLink تربط المنشآت الصحية بالكوادر الطبية المؤهلة، وتدير مناقصات الأجهزة والخدمات مع الموردين — بخصوصية كاملة وتوثيق موثوق لكل طرف.','MedLink connects healthcare facilities with qualified medical talent and manages equipment & service RFQs with suppliers — with full privacy and verified trust.','MedLink соединяет медучреждения с квалифицированным персоналом и управляет тендерами с поставщиками.','MedLink verbindet Gesundheitseinrichtungen mit qualifiziertem medizinischem Personal und verwaltet Ausschreibungen.','MedLinkは医療機関と有資格の医療人材を結び、サプライヤーとの調達依頼を管理します。','MedLink는 의료기관과 자격을 갖춘 의료 인력을 연결하고 공급업체와의 견적 요청을 관리합니다.','MedLink 连接医疗机构与合格医疗人才,管理与供应商的设备及服务招标。','MedLink conecta instalaciones de salud con talento médico calificado y gestiona solicitudes de equipos.','MedLink collega strutture sanitarie a personale medico qualificato e gestisce le richieste di attrezzature.','A MedLink conecta instituições de saúde a profissionais médicos qualificados e gerencia RFQs de equipamentos.','MedLink relie les établissements de santé à des talents médicaux qualifiés et gère les appels d\'offres.','MedLink صحت کی سہولیات کو اہل طبی عملے سے جوڑتا ہے اور سپلائرز کے ساتھ درخواستیں منظم کرتا ہے۔'],
  hero_cta1:['استعرض الكوادر الطبية','Browse Medical Staff','Смотреть персонал','Fachkräfte ansehen','医療スタッフを見る','의료진 보기','浏览医护人员','Ver personal médico','Sfoglia il personale','Ver profissionais','Voir le personnel','طبی عملہ دیکھیں'],
  hero_cta2:['تصفح المناقصات','Browse RFQs','Смотреть заявки','Anfragen ansehen','見積依頼を見る','견적요청 보기','浏览招标','Ver solicitudes','Sfoglia le richieste','Ver RFQs','Voir les appels d\'offres','درخواستیں دیکھیں'],
+ hero_cta3:['استعراض الموردين','Browse Suppliers','Смотреть поставщиков','Lieferanten ansehen','サプライヤーを見る','공급업체 보기','浏览供应商','Ver proveedores','Sfoglia i fornitori','Ver fornecedores','Voir les fournisseurs','سپلائرز دیکھیں'],
  hero_stat_staff:['كادر طبي مسجّل','Registered staff','Персонал в базе','Registrierte Fachkräfte','登録医療スタッフ','등록된 의료진','注册医护人员','Personal registrado','Personale registrato','Profissionais registrados','Personnel enregistré','رجسٹرڈ عملہ'],
  hero_stat_rfq:['مناقصة منشورة','Published RFQs','Опубликовано заявок','Veröffentlichte Anfragen','公開中の見積依頼','게시된 견적요청','已发布招标','Solicitudes publicadas','Richieste pubblicate','RFQs publicados','Appels d\'offres publiés','شائع شدہ درخواستیں'],
  hero_stat_suppliers:['مورّد معتمد','Verified suppliers','Проверенных поставщиков','Verifizierte Lieferanten','認証サプライヤー','인증된 공급업체','认证供应商','Proveedores verificados','Fornitori verificati','Fornecedores verificados','Fournisseurs vérifiés','تصدیق شدہ سپلائرز'],
@@ -823,6 +842,8 @@ function buildLangMenu(){
 }
 function setLang(l){ currentLang = l; applyLang(); document.getElementById('langMenu').classList.remove('open'); }
 function toggleLangMenu(){ document.getElementById('langMenu').classList.toggle('open'); }
+function toggleMobileMenu(){ document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMobileMenu(){ document.getElementById('mobileMenu').classList.remove('open'); }
 document.addEventListener('click', e=>{
   if(!e.target.closest('.lang-switch')) document.getElementById('langMenu')?.classList.remove('open');
   if(!e.target.closest('.user-chip') && !e.target.closest('.user-menu')) document.getElementById('userMenuEl')?.classList.remove('open');
@@ -1046,9 +1067,10 @@ async function renderHome(){
     sb.from('rfqs').select('*', {count:'exact', head:true}).eq('status','published'),
     sb.from('supplier_listings').select('*', {count:'exact', head:true}).eq('paid', true),
   ]);
-  document.getElementById('statStaffCount').textContent = staffCount ?? '0';
-  document.getElementById('statRfqCount').textContent = rfqCount ?? '0';
-  document.getElementById('statSupplierCount').textContent = supplierCount ?? '0';
+  const ov = (SETTINGS && SETTINGS.stats_override) || {};
+  document.getElementById('statStaffCount').textContent = (ov.staffCount!==null && ov.staffCount!==undefined && ov.staffCount!=='') ? ov.staffCount : (staffCount ?? '0');
+  document.getElementById('statRfqCount').textContent = (ov.rfqCount!==null && ov.rfqCount!==undefined && ov.rfqCount!=='') ? ov.rfqCount : (rfqCount ?? '0');
+  document.getElementById('statSupplierCount').textContent = (ov.supplierCount!==null && ov.supplierCount!==undefined && ov.supplierCount!=='') ? ov.supplierCount : (supplierCount ?? '0');
 
   const { data: pubRfqs } = await sb.from('rfqs').select('*').eq('status','published').order('created_at',{ascending:false}).limit(3);
   document.getElementById('homeRfqStrip').innerHTML = (pubRfqs&&pubRfqs.length)? pubRfqs.map(rfqCardHtml).join('') : `<div class="empty-note" style="grid-column:1/-1;">${currentLang==='ar'?'لا توجد مناقصات منشورة حاليًا':'No published RFQs yet'}</div>`;
@@ -1058,7 +1080,12 @@ async function renderHome(){
 
   if(SETTINGS){
     const items = (SETTINGS.partners||[]).concat(SETTINGS.partners||[]);
-    document.getElementById('partnersMarquee').innerHTML = items.map(p=>`<div class="marquee-item"><span class="sq"></span>${p}</div>`).join('');
+    document.getElementById('partnersMarquee').innerHTML = items.map(p=>{
+      const logo = p.logoPath ? sb.storage.from('public-assets').getPublicUrl(p.logoPath).data.publicUrl : null;
+      return logo
+        ? `<div class="marquee-item"><img src="${logo}" alt="${p.name}" style="height:28px; width:auto; object-fit:contain;"></div>`
+        : `<div class="marquee-item"><span class="sq"></span>${p.name}</div>`;
+    }).join('');
   }
 }
 function renderFooterDynamic(){
@@ -1084,9 +1111,9 @@ function staffCardHtml(s){
   return `
   <div class="gcard staff-card">
     <div class="staff-top">
-      <div class="avatar" style="background:${colorFor(s.profile_id)};">${(s.specialty||'؟')[0]}</div>
+      <div class="avatar" style="background:${colorFor(s.profile_id)};">${(s.first_name||s.specialty||'؟')[0]}</div>
       <div>
-        <div class="staff-name">${currentLang==='ar'?'كادر طبي محمي 🔒':'Protected profile 🔒'}</div>
+        <div class="staff-name">${s.first_name || (currentLang==='ar'?'كادر طبي':'Medical staff')}</div>
         <div class="staff-role">${s.specialty||''}</div>
       </div>
     </div>
@@ -1134,9 +1161,9 @@ async function renderStaffProfile(id){
   body.innerHTML = `
     <button class="btn btn-ghost btn-sm" style="margin-bottom:18px;" onclick="go('staffDirectory')">${currentLang==='ar'?'← رجوع للدليل':'← Back to directory'}</button>
     <div class="profile-hero">
-      <div class="profile-avatar" id="profAvatar" style="background:${colorFor(s.profile_id)};">${(s.specialty||'؟')[0]}</div>
+      <div class="profile-avatar" id="profAvatar" style="background:${colorFor(s.profile_id)};">${(s.first_name||s.specialty||'؟')[0]}</div>
       <div style="flex:1; min-width:200px;">
-        <h2 id="profName" style="font-size:20px;">${currentLang==='ar'?'كادر طبي محمي 🔒':'Protected profile 🔒'}</h2>
+        <h2 id="profName" style="font-size:20px;">${s.first_name || (currentLang==='ar'?'كادر طبي':'Medical staff')}</h2>
         <div class="tag-row">
           <span class="tag">${s.specialty||''}</span><span class="tag">${s.city||''}</span><span class="tag">${s.nationality||''}</span>
           <span class="tag">${s.experience||0}+ ${currentLang==='ar'?'سنوات خبرة':'yrs exp'}</span><span class="tag">${s.gender||''}</span>
@@ -1144,7 +1171,7 @@ async function renderStaffProfile(id){
         <p style="margin-top:14px; font-size:14px; color:var(--ink-soft);">${s.bio||''}</p>
         <div id="contactBlock" style="margin-top:18px;">
           <div class="locked-block" id="lockBlock">
-            <span style="font-size:13px; color:var(--ink-faint);">${currentLang==='ar'?'بيانات التواصل محمية.':'Contact details are protected.'}</span>
+            <span style="font-size:13px; color:var(--ink-faint);">${currentLang==='ar'?'الاسم الكامل، الصورة، وبيانات التواصل محمية.':'Full name, photo, and contact details are protected.'}</span>
           </div>
           <button class="btn btn-green" id="reqBtn" style="margin-top:10px;" onclick="requestNumber('${s.profile_id}')">${ICO.lock} ${t('btn_request_number')}</button>
         </div>
@@ -1154,7 +1181,7 @@ async function renderStaffProfile(id){
 async function requestNumber(staffId){
   if(!me){ showToast(currentLang==='ar'?'سجّل دخولك كمنشأة موثّقة أولًا':'Log in as a verified facility first'); go('login'); return; }
   const btn = document.getElementById('reqBtn'); setBtnLoading(btn,true);
-  const { data, error } = await sb.from('staff_private').select('full_name,phone').eq('profile_id', staffId).single();
+  const { data, error } = await sb.from('staff_private').select('full_name,phone,photo_path').eq('profile_id', staffId).single();
   setBtnLoading(btn,false);
   if(error || !data){
     if(me.profile.role==='client' && me.extra && !me.extra.verified){
@@ -1165,6 +1192,12 @@ async function requestNumber(staffId){
     return;
   }
   document.getElementById('profName').textContent = data.full_name;
+  if(data.photo_path){
+    const { data: signed } = await sb.storage.from('staff-photos').createSignedUrl(data.photo_path, 3600);
+    if(signed?.signedUrl){
+      document.getElementById('profAvatar').outerHTML = `<img id="profAvatar" src="${signed.signedUrl}" style="width:78px; height:78px; border-radius:22px; object-fit:cover; flex-shrink:0;">`;
+    }
+  }
   const lb = document.getElementById('lockBlock');
   lb.classList.add('revealed');
   lb.innerHTML = `<div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:13.5px;">${ICO.phone} <span class="ltr-num">${data.phone}</span></div>`;
@@ -1180,6 +1213,16 @@ async function requestNumber(staffId){
 ========================================================================== */
 function rfqCardHtml(r){
   const showRequester = r.type==='staff';
+  let actionHtml = '';
+  if(r.type==='staff'){
+    if(me && me.profile.role==='staff'){
+      actionHtml = `<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="openRfqOfferModal('${r.id}','staff')">${currentLang==='ar'?'تقدّم لهذه الفرصة':'Apply to this opportunity'}</button>`;
+    } else if(!me){
+      actionHtml = `<div style="margin-top:12px; font-size:12px; color:var(--ink-faint);">${currentLang==='ar'?'سجّل كـكادر طبي للتقديم على هذي الفرصة':'Register as medical staff to apply'} — <a class="link-inline" href="#" onclick="go('register');setRegRole('staff');return false">${currentLang==='ar'?'تقديم طلب':'Apply now'}</a></div>`;
+    }
+  } else {
+    actionHtml = `<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="openRfqOfferModal('${r.id}','supplier')">${currentLang==='ar'?'تقديم عرض':'Submit an offer'}</button>`;
+  }
   return `
   <div class="rfq-card type-${r.type}">
     <div class="rfq-top">
@@ -1195,7 +1238,53 @@ function rfqCardHtml(r){
       ${r.type==='supply'? `<span>📦 ${currentLang==='ar'?'الكمية':'Qty'}: ${r.qty||''}</span>`:''}
       ${r.type==='staff'? `<span>🩺 ${r.specialty||''}</span>`:''}
     </div>
+    ${actionHtml}
   </div>`;
+}
+function openRfqOfferModal(rfqId, submitterType){
+  const overlay = document.getElementById('genericModalOverlay');
+  document.getElementById('genericModalTitle').textContent = submitterType==='staff'
+    ? (currentLang==='ar'?'التقديم على الفرصة':'Apply to this opportunity')
+    : (currentLang==='ar'?'تقديم عرض':'Submit an offer');
+  let fieldsHtml = '';
+  if(submitterType==='staff'){
+    if(!me || me.profile.role!=='staff'){ showToast(currentLang==='ar'?'سجّل دخولك كـكادر طبي أولًا':'Log in as medical staff first'); go('login'); return; }
+    fieldsHtml = `
+      <p style="font-size:12.5px; color:var(--ink-soft); margin-bottom:14px;">${currentLang==='ar'?'سيتم إرسال بياناتك (الاسم، الجوال، البريد) مع رسالتك للمنشأة عبر فريق MedLink.':'Your details (name, phone, email) will be shared with the facility via the MedLink team.'}</p>
+      <div class="field"><label>${currentLang==='ar'?'رسالة مختصرة (اختياري)':'Short message (optional)'}</label><textarea id="offerMessage" placeholder="${currentLang==='ar'?'ليش تناسب هذي الفرصة؟':'Why are you a good fit?'}"></textarea></div>
+      <button class="btn btn-green btn-block" onclick="submitRfqOffer('${rfqId}','staff')">${currentLang==='ar'?'إرسال طلب التقديم':'Send application'}</button>`;
+  } else {
+    fieldsHtml = `
+      <div class="field"><label>${currentLang==='ar'?'اسم الشركة':'Company name'}</label><input id="offerCompany" type="text"></div>
+      <div class="field-row">
+        <div class="field"><label>${currentLang==='ar'?'الجوال':'Phone'}</label><input id="offerPhone" type="tel" placeholder="05xxxxxxxx"></div>
+        <div class="field"><label>${t('field_email')}</label><input id="offerEmail" type="email"></div>
+      </div>
+      <div class="field"><label>${currentLang==='ar'?'تفاصيل العرض':'Offer details'}</label><textarea id="offerMessage" placeholder="${currentLang==='ar'?'السعر التقديري، مدة التسليم، ملاحظات...':'Estimated price, delivery time, notes...'}"></textarea></div>
+      <button class="btn btn-green btn-block" onclick="submitRfqOffer('${rfqId}','supplier')">${currentLang==='ar'?'إرسال العرض':'Send offer'}</button>`;
+  }
+  document.getElementById('genericModalBody').innerHTML = fieldsHtml;
+  overlay.classList.add('show');
+}
+async function submitRfqOffer(rfqId, submitterType){
+  const message = document.getElementById('offerMessage').value.trim();
+  let payload = { rfq_id: rfqId, submitter_type: submitterType, message };
+  if(submitterType==='staff'){
+    payload.staff_id = me.authUser.id;
+    payload.name = me.extra?.full_name;
+    payload.phone = me.extra?.phone;
+    payload.email = me.authUser.email;
+  } else {
+    const company = document.getElementById('offerCompany').value.trim();
+    const phone = document.getElementById('offerPhone').value.trim();
+    const email = document.getElementById('offerEmail').value.trim();
+    if(!company || !phone || !email){ showToast(currentLang==='ar'?'الرجاء تعبئة بيانات الشركة':'Please fill in your company details'); return; }
+    payload.name = company; payload.phone = phone; payload.email = email;
+  }
+  const { error } = await sb.from('rfq_offers').insert(payload);
+  if(error){ showToast(error.message); return; }
+  closeModal('genericModalOverlay');
+  showToast(currentLang==='ar'?'تم إرسال طلبك، سيتواصل معك فريقنا':'Your submission was sent — our team will be in touch');
 }
 async function renderRfqFeed(){
   const list = document.getElementById('rfqFeedList');
@@ -1271,10 +1360,13 @@ async function submitRfq(e){
    SUPPLIERS
 ========================================================================== */
 function supplierCardHtml(v){
+  const logo = v.logo_path ? sb.storage.from('public-assets').getPublicUrl(v.logo_path).data.publicUrl : null;
   return `
   <div class="gcard">
     <div class="staff-top">
-      <div class="avatar" style="background:${colorFor(v.id)}; border-radius:12px;">${(v.company||'?')[0]}</div>
+      ${logo
+        ? `<img src="${logo}" style="width:46px; height:46px; border-radius:12px; object-fit:contain; background:#fff; border:1px solid var(--line);">`
+        : `<div class="avatar" style="background:${colorFor(v.id)}; border-radius:12px;">${(v.company||'?')[0]}</div>`}
       <div><div class="staff-name">${v.company}</div><div class="staff-role">${v.category||''}</div></div>
     </div>
     <p class="staff-bio">${v.services||''}</p>
@@ -1357,12 +1449,28 @@ async function renderDashStaff(tab, body){
   if(tab==='overview'){
     const { count: viewCount } = await sb.from('profile_views').select('*',{count:'exact',head:true}).eq('staff_id', me.authUser.id);
     const { count: reqCount } = await sb.from('contact_requests').select('*',{count:'exact',head:true}).eq('staff_id', me.authUser.id);
+    let photoImgHtml = `<div class="avatar" style="width:64px; height:64px; font-size:22px;">${(u.first_name||u.specialty||'؟')[0]}</div>`;
+    if(u.photo_path){
+      const { data: signed } = await sb.storage.from('staff-photos').createSignedUrl(u.photo_path, 3600);
+      if(signed?.signedUrl) photoImgHtml = `<img src="${signed.signedUrl}" style="width:64px; height:64px; border-radius:16px; object-fit:cover;">`;
+    }
     body.innerHTML = `
       <h2 style="margin-bottom:16px;">${u.full_name}</h2>
       <div class="stat-row">
         <div class="stat-card"><b>${viewCount||0}</b><span>${currentLang==='ar'?'مشاهدات لملفك':'Profile views'}</span></div>
         <div class="stat-card"><b>${reqCount||0}</b><span>${currentLang==='ar'?'طلبات تواصل':'Contact requests'}</span></div>
         <div class="stat-card"><b>${u.experience||0}+</b><span>${currentLang==='ar'?'سنوات خبرة':'Years experience'}</span></div>
+      </div>
+      <div class="gcard" style="max-width:520px; margin-bottom:16px;">
+        <h4 style="margin-bottom:10px; font-size:14px;">${currentLang==='ar'?'صورتك الشخصية (اختياري)':'Your profile photo (optional)'}</h4>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div id="staffPhotoPreview">${photoImgHtml}</div>
+          <div style="flex:1;">
+            <input type="file" id="staffPhotoInput" accept="image/*" style="font-size:12.5px;">
+            <p style="font-size:11.5px; color:var(--ink-faint); margin-top:6px;">${currentLang==='ar'?'لن تظهر صورتك للعامة أبدًا — فقط للمنشآت الموثّقة التي تطلب بيانات تواصلك.':'Your photo is never shown publicly — only to verified facilities that request your contact info.'}</p>
+            <button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="uploadStaffPhoto()">${currentLang==='ar'?'رفع الصورة':'Upload photo'}</button>
+          </div>
+        </div>
       </div>
       <div class="gcard" style="max-width:520px;">
         <h4 style="margin-bottom:10px; font-size:14px;">${currentLang==='ar'?'نبذتك المعروضة':'Your public bio'}</h4>
@@ -1379,13 +1487,7 @@ async function renderDashStaff(tab, body){
   } else if(tab==='opportunities'){
     const { data: opps } = await sb.from('rfqs').select('*').eq('status','published').eq('type','staff').eq('specialty', u.specialty);
     body.innerHTML = `<h3 style="margin-bottom:14px;">${currentLang==='ar'?'فرص متاحة في تخصصك':'Opportunities in your specialty'}</h3><div class="rfq-list">` +
-      ((opps&&opps.length)? opps.map(r=>`
-        <div class="rfq-card type-staff">
-          <div class="rfq-top"><div><div class="rfq-title">${r.title}</div><div class="rfq-sub">${r.hospital_name||''} · ${r.city||''}</div></div></div>
-          <p class="rfq-desc">${r.description||''}</p>
-          <div class="rfq-meta"><span>📅 ${r.deadline||''}</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="expressInterest('${r.id}')">${currentLang==='ar'?'أنا مهتم — أخطر الإدارة':'I\'m interested — notify admin'}</button>
-        </div>`).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد فرص مطابقة لتخصصك حاليًا':'No matching opportunities right now'}</div>`) + `</div>`;
+      ((opps&&opps.length)? opps.map(rfqCardHtml).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد فرص مطابقة لتخصصك حاليًا':'No matching opportunities right now'}</div>`) + `</div>`;
   }
 }
 async function renderDashSupplier(tab, body){
@@ -1407,19 +1509,23 @@ async function renderDashSupplier(tab, body){
   } else if(tab==='opportunities'){
     const { data: opps } = await sb.from('rfqs').select('*').eq('status','published').eq('type','supply');
     body.innerHTML = `<h3 style="margin-bottom:14px;">${currentLang==='ar'?'مناقصات مستلزمات موجهة':'Relevant supply RFQs'}</h3><div class="rfq-list">` +
-      ((opps&&opps.length)? opps.map(r=>`
-        <div class="rfq-card type-supply">
-          <div class="rfq-top"><div><div class="rfq-title">${r.title}</div><div class="rfq-sub">${currentLang==='ar'?'جهة صحية مسجّلة':'A registered facility'} · ${r.city||''}</div></div></div>
-          <p class="rfq-desc">${r.description||''}</p>
-          <div class="rfq-meta"><span>📅 ${r.deadline||''}</span><span>📦 ${currentLang==='ar'?'الكمية':'Qty'}: ${r.qty||''}</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="expressInterest('${r.id}')">${currentLang==='ar'?'أنا مهتم — أخطر الإدارة':'I\'m interested — notify admin'}</button>
-        </div>`).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد مناقصات مستلزمات منشورة حاليًا':'No published supply RFQs right now'}</div>`) + `</div>`;
+      ((opps&&opps.length)? opps.map(rfqCardHtml).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد مناقصات مستلزمات منشورة حاليًا':'No published supply RFQs right now'}</div>`) + `</div>`;
   }
 }
-async function expressInterest(rfqId){
-  if(!me) return;
-  await sb.from('contact_requests').insert({ rfq_id:rfqId, client_id:me.authUser.id, client_org_name: me.extra?.company||me.extra?.full_name||me.extra?.org_name, is_supplier_interest:true });
-  showToast(currentLang==='ar'?'تم إخطار الإدارة باهتمامك، سيتم التواصل معك':'Admin notified of your interest');
+async function uploadStaffPhoto(){
+  const input = document.getElementById('staffPhotoInput');
+  const file = input.files[0];
+  if(!file){ showToast(currentLang==='ar'?'اختر صورة أولًا':'Choose a photo first'); return; }
+  if(file.size > 4*1024*1024){ showToast(currentLang==='ar'?'حجم الصورة كبير جدًا (الحد الأقصى 4MB)':'Photo too large (max 4MB)'); return; }
+  const ext = (file.name.split('.').pop()||'jpg').toLowerCase();
+  const path = `${me.authUser.id}/photo.${ext}`;
+  const { error: upErr } = await sb.storage.from('staff-photos').upload(path, file, { upsert:true });
+  if(upErr){ showToast(upErr.message); return; }
+  const { error: dbErr } = await sb.from('staff_private').update({ photo_path: path }).eq('profile_id', me.authUser.id);
+  if(dbErr){ showToast(dbErr.message); return; }
+  await refreshMe();
+  showToast(currentLang==='ar'?'تم رفع الصورة بنجاح':'Photo uploaded successfully');
+  renderDashTab();
 }
 function timeAgo(ts){
   const diff = Date.now()-new Date(ts).getTime(); const h = Math.floor(diff/3.6e6);
@@ -1596,14 +1702,19 @@ async function approveApplication(type, applicationId){
     showToast(err.message);
   }
 }
-function openSupplierListingModal(requestId){
+function openSupplierListingModal(requestId, listingId){
   const overlay = document.getElementById('genericModalOverlay');
-  document.getElementById('genericModalTitle').textContent = requestId? 'إضافة كعرض بسوق الموردين' : 'إضافة مورد يدويًا';
+  document.getElementById('genericModalTitle').textContent = listingId? 'تعديل بيانات المورد' : (requestId? 'إضافة كعرض بسوق الموردين' : 'إضافة مورد يدويًا');
   document.getElementById('genericModalBody').innerHTML = `
     <div class="field"><label>اسم الشركة</label><input id="slCompany" type="text"></div>
     <div class="field"><label>فئة النشاط</label><select id="slCategory"></select></div>
     <div class="field"><label>وصف الخدمات</label><textarea id="slServices"></textarea></div>
-    <button class="btn btn-green btn-block" onclick="createSupplierListing(${requestId?`'${requestId}'`:'null'})">${requestId?'إضافة للسوق الآن':'إضافة المورد'}</button>
+    <div class="field">
+      <label>شعار الشركة (اختياري)</label>
+      <div id="slLogoPreview" style="margin-bottom:8px;"></div>
+      <input id="slLogo" type="file" accept="image/*">
+    </div>
+    <button class="btn btn-green btn-block" onclick="saveSupplierListing(${requestId?`'${requestId}'`:'null'}, ${listingId?`'${listingId}'`:'null'})">${listingId?'حفظ التعديلات':(requestId?'إضافة للسوق الآن':'إضافة المورد')}</button>
   `;
   overlay.classList.add('show');
   fillSelect(document.getElementById('slCategory'), SETTINGS.filters.categories, false);
@@ -1616,17 +1727,47 @@ function openSupplierListingModal(requestId){
         if(data.category) document.getElementById('slCategory').value = data.category;
       }
     })();
+  } else if(listingId){
+    (async()=>{
+      const { data } = await sb.from('supplier_listings').select('*').eq('id', listingId).single();
+      if(data){
+        document.getElementById('slCompany').value = data.company||'';
+        document.getElementById('slServices').value = data.services||'';
+        if(data.category) document.getElementById('slCategory').value = data.category;
+        if(data.logo_path){
+          const logoUrl = sb.storage.from('public-assets').getPublicUrl(data.logo_path).data.publicUrl;
+          document.getElementById('slLogoPreview').innerHTML = `<img src="${logoUrl}" style="width:44px; height:44px; border-radius:10px; object-fit:contain; background:#fff; border:1px solid var(--line);">`;
+        }
+      }
+    })();
   }
 }
-async function createSupplierListing(requestId){
+async function saveSupplierListing(requestId, listingId){
   const company = document.getElementById('slCompany').value.trim();
   const category = document.getElementById('slCategory').value;
   const services = document.getElementById('slServices').value.trim();
-  const { error } = await sb.from('supplier_listings').insert({ company, category, services, paid:true });
-  if(error){ showToast(error.message); return; }
-  if(requestId) await sb.from('supplier_requests').update({status:'approved'}).eq('id', requestId);
+  const file = document.getElementById('slLogo').files[0];
+  let logoPath = null;
+  if(file){
+    const ext = (file.name.split('.').pop()||'png').toLowerCase();
+    const path = `suppliers/${Date.now()}.${ext}`;
+    const { error: upErr } = await sb.storage.from('public-assets').upload(path, file, { upsert:true });
+    if(upErr){ showToast(upErr.message); return; }
+    logoPath = path;
+  }
+  if(listingId){
+    const payload = { company, category, services };
+    if(logoPath) payload.logo_path = logoPath;
+    const { error } = await sb.from('supplier_listings').update(payload).eq('id', listingId);
+    if(error){ showToast(error.message); return; }
+    showToast('تم حفظ التعديلات');
+  } else {
+    const { error } = await sb.from('supplier_listings').insert({ company, category, services, paid:true, logo_path:logoPath });
+    if(error){ showToast(error.message); return; }
+    if(requestId) await sb.from('supplier_requests').update({status:'approved'}).eq('id', requestId);
+    showToast('تمت إضافة المورد للسوق');
+  }
   closeModal('genericModalOverlay');
-  showToast('تمت إضافة المورد للسوق');
   adminApplications(document.getElementById('adminBody'));
   if(adminTab==='suppliers') adminSuppliers(document.getElementById('adminBody'));
 }
@@ -1646,18 +1787,32 @@ async function adminStaff(body){
   const { data: pubs } = await sb.from('staff_public').select('*');
   const { data: privs } = await sb.from('staff_private').select('*');
   const privMap = {}; (privs||[]).forEach(p=>privMap[p.profile_id]=p);
-  body.innerHTML = `<div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الجوال</th><th>التخصص</th><th>الجنسية</th><th>المدينة</th><th>تواصل</th></tr></thead><tbody>
-    ${(pubs||[]).map(s=>{ const p = privMap[s.profile_id]||{}; return `<tr><td>${p.full_name||'—'}</td><td class="ltr-num">${p.phone||'—'}</td><td>${s.specialty||''}</td><td>${s.nationality||''}</td><td>${s.city||''}</td><td>${p.phone?`<a class="link-inline" href="tel:${p.phone}">اتصال</a>`:''}</td></tr>`; }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--ink-faint)">لا يوجد كوادر بعد</td></tr>'}
+  const rows = await Promise.all((pubs||[]).map(async s=>{
+    const p = privMap[s.profile_id]||{};
+    let photoCell = '—';
+    if(p.photo_path){
+      const { data: signed } = await sb.storage.from('staff-photos').createSignedUrl(p.photo_path, 3600);
+      if(signed?.signedUrl) photoCell = `<img src="${signed.signedUrl}" style="width:36px; height:36px; border-radius:10px; object-fit:cover;">`;
+    }
+    return `<tr><td>${photoCell}</td><td>${p.full_name||'—'}</td><td class="ltr-num">${p.phone||'—'}</td><td>${s.specialty||''}</td><td>${s.nationality||''}</td><td>${s.city||''}</td><td>${p.phone?`<a class="link-inline" href="tel:${p.phone}">اتصال</a>`:''}</td></tr>`;
+  }));
+  body.innerHTML = `<div class="table-wrap"><table><thead><tr><th>الصورة</th><th>الاسم</th><th>الجوال</th><th>التخصص</th><th>الجنسية</th><th>المدينة</th><th>تواصل</th></tr></thead><tbody>
+    ${rows.join('') || '<tr><td colspan="7" style="text-align:center;color:var(--ink-faint)">لا يوجد كوادر بعد</td></tr>'}
   </tbody></table></div>`;
 }
 async function adminSuppliers(body){
   const { data } = await sb.from('supplier_listings').select('*').order('created_at',{ascending:false});
   body.innerHTML = `
-    <div style="margin-bottom:16px;"><button class="btn btn-primary btn-sm" onclick="openSupplierListingModal(null)">+ إضافة مورد يدويًا</button></div>
-    <div class="table-wrap"><table><thead><tr><th>الشركة</th><th>الفئة</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>
-    ${(data||[]).map(v=>`<tr><td>${v.company}</td><td>${v.category||''}</td><td><span class="pill ${v.paid?'ok':'no'}">${v.paid?'ظاهر بالسوق':'مخفي'}</span></td>
-    <td>${v.paid? `<button class="btn btn-danger btn-sm" onclick="toggleListingPaid('${v.id}',false)">إخفاء</button>`:`<button class="btn btn-green btn-sm" onclick="toggleListingPaid('${v.id}',true)">إظهار بالسوق</button>`}
-    <button class="btn btn-ghost btn-sm" onclick="deleteListing('${v.id}')">حذف</button></td></tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--ink-faint)">لا يوجد موردون مدرجون بعد</td></tr>'}
+    <div style="margin-bottom:16px;"><button class="btn btn-primary btn-sm" onclick="openSupplierListingModal(null, null)">+ إضافة مورد يدويًا</button></div>
+    <div class="table-wrap"><table><thead><tr><th>الشعار</th><th>الشركة</th><th>الفئة</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>
+    ${(data||[]).map(v=>{
+      const logo = v.logo_path ? sb.storage.from('public-assets').getPublicUrl(v.logo_path).data.publicUrl : null;
+      const logoCell = logo ? `<img src="${logo}" style="width:32px; height:32px; border-radius:8px; object-fit:contain; background:#fff; border:1px solid var(--line);">` : '—';
+      return `<tr><td>${logoCell}</td><td>${v.company}</td><td>${v.category||''}</td><td><span class="pill ${v.paid?'ok':'no'}">${v.paid?'ظاهر بالسوق':'مخفي'}</span></td>
+      <td>${v.paid? `<button class="btn btn-danger btn-sm" onclick="toggleListingPaid('${v.id}',false)">إخفاء</button>`:`<button class="btn btn-green btn-sm" onclick="toggleListingPaid('${v.id}',true)">إظهار بالسوق</button>`}
+      <button class="btn btn-ghost btn-sm" onclick="openSupplierListingModal(null, '${v.id}')">تعديل</button>
+      <button class="btn btn-ghost btn-sm" onclick="deleteListing('${v.id}')">حذف</button></td></tr>`;
+    }).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint)">لا يوجد موردون مدرجون بعد</td></tr>'}
   </tbody></table></div>`;
 }
 async function toggleListingPaid(id,val){
@@ -1673,6 +1828,7 @@ async function deleteListing(id){
 async function adminRfqs(body){
   const { data: pending } = await sb.from('rfqs').select('*, rfq_private(*)').eq('status','pending_review');
   const { data: published } = await sb.from('rfqs').select('*, rfq_private(*)').eq('status','published');
+  const { data: offers } = await sb.from('rfq_offers').select('*, rfqs(title)').order('created_at',{ascending:false});
   body.innerHTML = `
     <h4 style="margin-bottom:10px;">قيد المراجعة (${(pending||[]).length})</h4>
     <div class="table-wrap" style="margin-bottom:24px;"><table><thead><tr><th>العنوان</th><th>النوع</th><th>الجهة</th><th>هاتف التحقق</th><th>تأكيد هاتفي</th><th>إجراء</th></tr></thead><tbody>
@@ -1681,8 +1837,12 @@ async function adminRfqs(body){
       <td><button class="btn btn-green btn-sm" ${r.phone_verified?'':'disabled'} onclick="publishRfq('${r.id}')">نشر</button> <button class="btn btn-danger btn-sm" onclick="rejectRfq('${r.id}')">رفض</button></td></tr>`).join('') || '<tr><td colspan="6" style="text-align:center; color:var(--ink-faint);">لا توجد طلبات قيد المراجعة</td></tr>'}
     </tbody></table></div>
     <h4 style="margin-bottom:10px;">منشورة (${(published||[]).length})</h4>
-    <div class="table-wrap"><table><thead><tr><th>العنوان</th><th>النوع</th><th>الجهة</th><th>إجراء</th></tr></thead><tbody>
+    <div class="table-wrap" style="margin-bottom:24px;"><table><thead><tr><th>العنوان</th><th>النوع</th><th>الجهة</th><th>إجراء</th></tr></thead><tbody>
     ${(published||[]).map(r=>`<tr><td>${r.title}</td><td>${r.type==='staff'?'كوادر':'مستلزمات'}</td><td>${r.rfq_private?.requester_org_name||''}</td><td><button class="btn btn-ghost btn-sm" onclick="unpublishRfq('${r.id}')">إلغاء النشر</button></td></tr>`).join('') || '<tr><td colspan="4" style="text-align:center; color:var(--ink-faint);">لا توجد مناقصات منشورة</td></tr>'}
+    </tbody></table></div>
+    <h4 style="margin-bottom:10px;">العروض والتقديمات المستلمة (${(offers||[]).length})</h4>
+    <div class="table-wrap"><table><thead><tr><th>المناقصة</th><th>النوع</th><th>الاسم</th><th>الجوال</th><th>البريد</th><th>الرسالة</th><th>التاريخ</th></tr></thead><tbody>
+    ${(offers||[]).map(o=>`<tr><td>${o.rfqs?.title||''}</td><td>${o.submitter_type==='staff'?'كادر طبي':'مورد'}</td><td>${o.name||''}</td><td class="ltr-num">${o.phone||''}</td><td class="ltr-num">${o.email||''}</td><td style="white-space:normal; max-width:220px;">${o.message||''}</td><td>${new Date(o.created_at).toLocaleDateString('ar-SA')}</td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center; color:var(--ink-faint);">لا توجد عروض بعد</td></tr>'}
     </tbody></table></div>`;
 }
 async function setRfqPhoneVerified(id, val){ await sb.from('rfqs').update({phone_verified:val}).eq('id',id); adminRfqs(document.getElementById('adminBody')); }
@@ -1701,6 +1861,11 @@ async function adminSettings(body){
   const s = SETTINGS;
   body.innerHTML = `
     <div class="gcard" style="max-width:640px; margin-bottom:18px;">
+      <h4 style="margin-bottom:12px;">تغيير كلمة مرور الإدارة</h4>
+      <div class="field"><label>كلمة المرور الجديدة (٦ أحرف على الأقل)</label><input id="settingsNewPass" type="password" placeholder="••••••••"></div>
+      <button class="btn btn-primary btn-sm" onclick="changeAdminPasswordFromSettings()">حفظ كلمة المرور الجديدة</button>
+    </div>
+    <div class="gcard" style="max-width:640px; margin-bottom:18px;">
       <h4 style="margin-bottom:12px;">بيانات التواصل</h4>
       <div class="field"><label>البريد</label><input id="setEmail" value="${s.contact_email||''}"></div>
       <div class="field"><label>الجوال</label><input id="setPhone" value="${s.contact_phone||''}"></div>
@@ -1716,8 +1881,16 @@ async function adminSettings(body){
     </div>
     <div class="gcard" style="max-width:640px; margin-bottom:18px;">
       <h4 style="margin-bottom:12px;">شركاء النجاح</h4>
-      <div class="settings-list" id="partnersListEl">${(s.partners||[]).map((p,i)=>`<div class="settings-item"><span>${p}</span><button class="small-x" onclick="removePartner(${i})">✕</button></div>`).join('')}</div>
-      <div style="display:flex; gap:8px;"><input id="newPartner" placeholder="اسم الشريك" style="flex:1; border:1.5px solid var(--line); border-radius:10px; padding:9px 12px;"><button class="btn btn-primary btn-sm" onclick="addPartner()">إضافة</button></div>
+      <div class="settings-list" id="partnersListEl">${(s.partners||[]).map((p,i)=>{
+        const logo = p.logoPath ? sb.storage.from('public-assets').getPublicUrl(p.logoPath).data.publicUrl : null;
+        return `<div class="settings-item">${logo?`<img src="${logo}" style="width:32px; height:32px; border-radius:8px; object-fit:contain; background:#fff;">`:`<div style="width:32px; height:32px; border-radius:8px; background:var(--indigo-pale); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--indigo); font-weight:800;">${(p.name||'?')[0]}</div>`}<span>${p.name}</span><button class="small-x" onclick="removePartner(${i})">✕</button></div>`;
+      }).join('')}</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <input id="newPartner" placeholder="اسم الشريك" style="flex:1; min-width:140px; border:1.5px solid var(--line); border-radius:10px; padding:9px 12px;">
+        <input id="newPartnerLogo" type="file" accept="image/*" style="font-size:12px; max-width:180px;">
+        <button class="btn btn-primary btn-sm" onclick="addPartner()">إضافة</button>
+      </div>
+      <p style="font-size:11.5px; color:var(--ink-faint); margin-top:8px;">الشعار اختياري — لو ما رفعت شعار، يظهر اسم الشريك بس.</p>
     </div>
     <div class="gcard" style="max-width:640px;">
       <h4 style="margin-bottom:12px;">إدارة الفلاتر</h4>
@@ -1742,7 +1915,22 @@ async function addFilterItem(key){
   SETTINGS.filters[key].push(val); await saveFilters(); adminSettings(document.getElementById('adminBody'));
 }
 async function removeFilterItem(key,i){ SETTINGS.filters[key].splice(i,1); await saveFilters(); adminSettings(document.getElementById('adminBody')); }
-async function addPartner(){ const v=document.getElementById('newPartner').value.trim(); if(!v) return; SETTINGS.partners.push(v); await sb.from('settings').update({partners:SETTINGS.partners}).eq('id',1); adminSettings(document.getElementById('adminBody')); }
+async function addPartner(){
+  const v=document.getElementById('newPartner').value.trim(); if(!v) return;
+  const fileInput = document.getElementById('newPartnerLogo');
+  const file = fileInput.files[0];
+  let logoPath = null;
+  if(file){
+    const ext = (file.name.split('.').pop()||'png').toLowerCase();
+    const path = `partners/${Date.now()}.${ext}`;
+    const { error: upErr } = await sb.storage.from('public-assets').upload(path, file, { upsert:true });
+    if(upErr){ showToast(upErr.message); return; }
+    logoPath = path;
+  }
+  SETTINGS.partners.push({ name:v, logoPath });
+  await sb.from('settings').update({partners:SETTINGS.partners}).eq('id',1);
+  adminSettings(document.getElementById('adminBody'));
+}
 async function removePartner(i){ SETTINGS.partners.splice(i,1); await sb.from('settings').update({partners:SETTINGS.partners}).eq('id',1); adminSettings(document.getElementById('adminBody')); }
 async function saveContactSettings(){
   SETTINGS.contact_email = document.getElementById('setEmail').value.trim();
