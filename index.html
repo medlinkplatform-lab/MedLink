@@ -171,7 +171,7 @@ section{ padding:64px 0; }
 
 .marquee{ overflow:hidden; margin-top:16px; }
 .marquee-track{ display:flex; gap:44px; width:max-content; animation:scrollX 26s linear infinite; align-items:center; }
-@keyframes scrollX{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+@keyframes scrollX{ from{transform:translateX(0);} to{transform:translateX(-33.3333%);} }
 .marquee-item{ font-weight:800; color:var(--ink-faint); font-size:14px; display:flex; align-items:center; gap:8px; opacity:.8; }
 .marquee-item .sq{ width:8px; height:8px; border-radius:3px; background:var(--indigo); }
 
@@ -1075,14 +1075,26 @@ async function renderHome(){
   const { data: feat } = await sb.from('staff_public').select('*').order('created_at',{ascending:false}).limit(3);
   document.getElementById('homeStaffStrip').innerHTML = (feat||[]).map(staffCardHtml).join('');
 
-  if(SETTINGS){
-    const items = (SETTINGS.partners||[]).concat(SETTINGS.partners||[]);
-    document.getElementById('partnersMarquee').innerHTML = items.map(p=>{
+  const marqueeTrack = document.getElementById('partnersMarquee');
+  const marqueeWrap = marqueeTrack.closest('.marquee');
+  if(SETTINGS && SETTINGS.partners && SETTINGS.partners.length){
+    const base = SETTINGS.partners;
+    const items = [...base, ...base, ...base];
+    marqueeTrack.innerHTML = items.map(p=>{
       const logo = p.logoPath ? sb.storage.from('public-assets').getPublicUrl(p.logoPath).data.publicUrl : null;
       return logo
         ? `<div class="marquee-item"><img src="${logo}" alt="${p.name}" style="height:28px; width:auto; object-fit:contain;"></div>`
         : `<div class="marquee-item"><span class="sq"></span>${p.name}</div>`;
     }).join('');
+    if(marqueeWrap) marqueeWrap.style.display = '';
+    // iOS Safari sometimes fails to (re)compute a CSS animation on an element whose
+    // content/width changed after the animation was already declared — force a reflow
+    // by toggling the animation off and back on so it restarts cleanly, no scroll needed.
+    marqueeTrack.style.animation = 'none';
+    void marqueeTrack.offsetWidth;
+    marqueeTrack.style.animation = '';
+  } else if(marqueeWrap){
+    marqueeWrap.style.display = 'none';
   }
 }
 function renderFooterDynamic(){
