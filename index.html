@@ -344,7 +344,7 @@ footer .flinks a:hover{ color:var(--indigo); }
 
 <!-- ============ HOME ============ -->
 <section class="view active" id="view-home" data-view>
- <header class="hero">
+ <header class="hero" id="homeSection_hero">
   <canvas class="hero-canvas" id="heroCanvas"></canvas>
 
   <div class="med-icon" style="top:9%; left:7%; width:32px; height:32px; animation-delay:.2s,.1s;" title="Cardiology">
@@ -374,12 +374,12 @@ footer .flinks a:hover{ color:var(--indigo); }
       <div class="eyebrow"><span class="dot"></span><span data-i18n="hero_eyebrow">سوق طبي حي متصل بشبكتك</span></div>
       <h1><span class="a1" data-i18n="hero_title_a">سوق طبي واحد</span> <span data-i18n="hero_title_b">لتوظيف الكوادر وإدارة المناقصات</span></h1>
       <p class="lead" data-i18n="hero_lead">MedLink تربط المنشآت الصحية بالكوادر الطبية المؤهلة، وتدير مناقصات الأجهزة والخدمات مع الموردين — بخصوصية كاملة وتوثيق موثوق لكل طرف.</p>
-      <div class="hero-ctas">
+      <div class="hero-ctas" id="homeSection_heroCtas">
         <button class="btn btn-primary" onclick="go('staffDirectory')" data-i18n="hero_cta1">استعرض الكوادر الطبية</button>
         <button class="btn btn-ghost" onclick="go('rfqFeed')" data-i18n="hero_cta2">تصفح المناقصات</button>
         <button class="btn btn-ghost" onclick="go('suppliers')" data-i18n="hero_cta3">استعراض الموردين</button>
       </div>
-      <div class="hero-stats">
+      <div class="hero-stats" id="homeSection_heroStats">
         <div class="stat"><b id="statStaffCount">—</b><span data-i18n="hero_stat_staff">كادر طبي مسجّل</span></div>
         <div class="stat"><b id="statRfqCount">—</b><span data-i18n="hero_stat_rfq">مناقصة منشورة</span></div>
         <div class="stat"><b id="statSupplierCount">—</b><span data-i18n="hero_stat_suppliers">مورّد معتمد</span></div>
@@ -394,7 +394,7 @@ footer .flinks a:hover{ color:var(--indigo); }
   </div>
  </header>
 
- <section>
+ <section id="homeSection_rfqStrip">
   <div class="wrap">
    <div class="section-head reveal">
      <div class="eyebrow" data-i18n="home_rfq_eyebrow">أحدث الفرص</div>
@@ -405,7 +405,7 @@ footer .flinks a:hover{ color:var(--indigo); }
   </div>
  </section>
 
- <section class="section-alt">
+ <section class="section-alt" id="homeSection_staffStrip">
   <div class="wrap">
    <div class="section-head reveal">
      <div class="eyebrow" data-i18n="home_staff_eyebrow">كوادر مميزة</div>
@@ -416,7 +416,7 @@ footer .flinks a:hover{ color:var(--indigo); }
   </div>
  </section>
 
- <section>
+ <section id="homeSection_partners">
    <div class="wrap" style="text-align:center;">
      <div class="eyebrow" style="margin:0 auto 14px;" data-i18n="home_partners_eyebrow">شركاء النجاح</div>
      <div class="marquee"><div class="marquee-track" id="partnersMarquee"></div></div>
@@ -464,6 +464,10 @@ footer .flinks a:hover{ color:var(--indigo); }
             </div>
           </div>
           <div class="field"><label data-i18n="field_city">المدينة</label><select id="regCity"></select></div>
+          <div class="field-row">
+            <div class="field"><label>رقم السجل التجاري</label><input id="regCommReg" type="text" placeholder="70XXXXXXXX"></div>
+            <div class="field"><label>رقم الترخيص (وزارة الصحة)</label><input id="regLicenseNumber" type="text"></div>
+          </div>
           <div class="field"><label data-i18n="field_branches">الفروع (اختياري)</label><div id="branchList"></div>
             <button type="button" class="btn btn-ghost btn-sm" onclick="addBranchRow()" data-i18n="field_add_branch">+ إضافة فرع</button>
           </div>
@@ -474,6 +478,9 @@ footer .flinks a:hover{ color:var(--indigo); }
         </div>
 
         <div id="fieldsStaff" style="display:none;">
+          <div class="field"><label>فئة المستخدم</label><select id="regCategory2"></select></div>
+
+          <h4 style="font-size:13px; color:var(--ink-faint); margin:18px 0 10px; text-transform:uppercase; letter-spacing:.03em;">البيانات الشخصية</h4>
           <div class="field"><label data-i18n="field_fullname">الاسم الكامل (لن يظهر للعامة)</label><input id="regFullName" type="text" data-i18n-placeholder="ph_fullname" placeholder="د. فلان الفلاني"></div>
           <div class="field-row">
             <div class="field"><label data-i18n="field_phone">رقم الجوال (لن يظهر للعامة)</label><input id="regPhone" type="tel" placeholder="05xxxxxxxx"></div>
@@ -482,13 +489,46 @@ footer .flinks a:hover{ color:var(--indigo); }
             </div>
           </div>
           <div class="field-row">
-            <div class="field"><label data-i18n="field_specialty">التخصص</label><select id="regSpecialty"></select></div>
-            <div class="field"><label data-i18n="field_nationality">الجنسية</label><select id="regNationality"></select></div>
+            <div class="field"><label>رقم الهوية / الإقامة</label><input id="regNationalId" type="text" placeholder="1XXXXXXXXX"></div>
+            <div class="field"><label>تاريخ الميلاد</label><input id="regBirthDate" type="date"></div>
           </div>
           <div class="field-row">
+            <div class="field"><label data-i18n="field_nationality">الجنسية</label><select id="regNationality"></select></div>
             <div class="field"><label data-i18n="field_city">المدينة</label><select id="regCity2"></select></div>
-            <div class="field"><label data-i18n="field_experience">سنوات الخبرة</label><input id="regExperience" type="number" min="0" placeholder="5"></div>
           </div>
+          <div class="field"><label>الأحياء التي ترغب بالعمل بها (اختياري)</label><input id="regDistricts" type="text" placeholder="مثال: الملقا، النرجس، حطين — افصل بينها بفاصلة"></div>
+
+          <h4 style="font-size:13px; color:var(--ink-faint); margin:18px 0 10px; text-transform:uppercase; letter-spacing:.03em;">المؤهلات</h4>
+          <div class="field-row">
+            <div class="field"><label data-i18n="field_specialty">التخصص</label><select id="regSpecialty"></select></div>
+            <div class="field"><label>التخصص الدقيق (اختياري)</label><input id="regSubSpecialty" type="text"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>الدرجة العلمية</label><input id="regDegree" type="text" placeholder="بكالوريوس / ماجستير / بورد..."></div>
+            <div class="field"><label>سنة التخرج</label><input id="regGradYear" type="number" min="1970" max="2030" placeholder="2018"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>الجامعة</label><input id="regUniversity" type="text"></div>
+            <div class="field"><label>التصنيف المهني (الهيئة السعودية)</label><input id="regProfClass" type="text"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>رقم التسجيل المهني</label><input id="regRegNumber" type="text"></div>
+            <div class="field"><label>تاريخ انتهاء التسجيل</label><input id="regRegExpiry" type="date"></div>
+          </div>
+
+          <h4 style="font-size:13px; color:var(--ink-faint); margin:18px 0 10px; text-transform:uppercase; letter-spacing:.03em;">الخبرات</h4>
+          <div class="field-row">
+            <div class="field"><label data-i18n="field_experience">سنوات الخبرة</label><input id="regExperience" type="number" min="0" placeholder="5"></div>
+            <div class="field"><label>آخر جهة عمل</label><input id="regLastEmployer" type="text"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>الراتب السابق (اختياري)</label><input id="regPrevSalary" type="number" min="0" placeholder="ريال شهريًا"></div>
+            <div class="field"><label>الراتب المتوقع</label><input id="regExpSalary" type="number" min="0" placeholder="ريال شهريًا"></div>
+          </div>
+
+          <h4 style="font-size:13px; color:var(--ink-faint); margin:18px 0 10px; text-transform:uppercase; letter-spacing:.03em;">نوع العمل المطلوب</h4>
+          <div class="field" id="workTypesBox" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;"></div>
+
           <div class="field"><label data-i18n="field_bio">نبذة تعريفية (تظهر للعامة)</label><textarea id="regBio" data-i18n-placeholder="ph_bio" placeholder="اكتب نبذة مختصرة عن خبراتك ومجالات اهتمامك..."></textarea></div>
           <div class="field"><label data-i18n="field_email">البريد الإلكتروني</label><input required id="regStaffEmail" type="email" placeholder="you@example.com"></div>
         </div>
@@ -980,18 +1020,38 @@ async function submitRegister(e){
       const { error } = await sb.from('client_applications').insert({
         org_name: document.getElementById('regOrgName').value.trim()||'منشأة صحية',
         org_type: document.getElementById('regOrgType').value, city: document.getElementById('regCity').value, branches,
+        commercial_register: document.getElementById('regCommReg').value.trim(),
+        license_number: document.getElementById('regLicenseNumber').value.trim(),
         contact_email: document.getElementById('regClientEmail').value.trim(),
         contact_phone: document.getElementById('regClientPhone').value.trim()
       });
       if(error) throw error;
     } else if(regRole==='staff'){
+      const workTypes = Array.from(document.querySelectorAll('.workTypeChk:checked')).map(c=>c.value);
+      const districts = document.getElementById('regDistricts').value.split(',').map(s=>s.trim()).filter(Boolean);
       const { error } = await sb.from('staff_applications').insert({
+        category: document.getElementById('regCategory2').value,
         full_name: document.getElementById('regFullName').value.trim()||'كادر طبي',
         phone: document.getElementById('regPhone').value.trim(),
         email: document.getElementById('regStaffEmail').value.trim(),
         gender: document.getElementById('regGender').value, specialty: document.getElementById('regSpecialty').value,
         nationality: document.getElementById('regNationality').value, city: document.getElementById('regCity2').value,
-        experience: Number(document.getElementById('regExperience').value)||0, bio: document.getElementById('regBio').value.trim()||'—'
+        national_id: document.getElementById('regNationalId').value.trim(),
+        birth_date: document.getElementById('regBirthDate').value || null,
+        districts,
+        sub_specialty: document.getElementById('regSubSpecialty').value.trim(),
+        degree: document.getElementById('regDegree').value.trim(),
+        grad_year: Number(document.getElementById('regGradYear').value)||null,
+        university: document.getElementById('regUniversity').value.trim(),
+        professional_class: document.getElementById('regProfClass').value.trim(),
+        registration_number: document.getElementById('regRegNumber').value.trim(),
+        registration_expiry: document.getElementById('regRegExpiry').value || null,
+        experience: Number(document.getElementById('regExperience').value)||0,
+        last_employer: document.getElementById('regLastEmployer').value.trim(),
+        previous_salary: Number(document.getElementById('regPrevSalary').value)||null,
+        expected_salary: Number(document.getElementById('regExpSalary').value)||null,
+        work_types: workTypes,
+        bio: document.getElementById('regBio').value.trim()||'—'
       });
       if(error) throw error;
     } else {
@@ -1035,14 +1095,30 @@ function renderStaticOptions(){
   fillSelect(document.getElementById('regNationality'), f.nationalities, false);
   fillSelect(document.getElementById('regOrgType'), f.orgTypes, false);
   fillSelect(document.getElementById('regCategory'), f.categories, false);
+  fillSelect(document.getElementById('regCategory2'), f.staffCategories, false);
   fillSelect(document.getElementById('fSpecialty'), f.specialties, true);
   fillSelect(document.getElementById('fNationality'), f.nationalities, true);
   fillSelect(document.getElementById('fCity'), f.cities, true);
+  const wtBox = document.getElementById('workTypesBox');
+  if(wtBox && f.workTypes){
+    wtBox.innerHTML = f.workTypes.map(w=>`
+      <label style="display:flex; align-items:center; gap:6px; background:var(--bg); border-radius:9px; padding:8px 12px; font-size:12.5px; font-weight:700; color:var(--ink-soft); cursor:pointer;">
+        <input type="checkbox" value="${w}" class="workTypeChk"> ${w}
+      </label>`).join('');
+  }
 }
 async function loadSettings(){
   const { data } = await sb.from('settings').select('*').eq('id',1).single();
   SETTINGS = data;
   renderStaticOptions();
+  applySectionVisibility();
+}
+function applySectionVisibility(){
+  const vis = (SETTINGS && SETTINGS.section_visibility) || {};
+  ['hero','heroCtas','heroStats','rfqStrip','staffStrip','partners'].forEach(key=>{
+    const el = document.getElementById('homeSection_'+key);
+    if(el) el.style.display = (vis[key]===false) ? 'none' : '';
+  });
 }
 
 /* ==========================================================================
@@ -1059,6 +1135,7 @@ const ICO = {
    HOME
 ========================================================================== */
 async function renderHome(){
+  applySectionVisibility();
   const [{count:staffCount}, {count:rfqCount}, {count:supplierCount}] = await Promise.all([
     sb.from('staff_public').select('*', {count:'exact', head:true}),
     sb.from('rfqs').select('*', {count:'exact', head:true}).eq('status','published'),
@@ -1330,6 +1407,21 @@ async function renderRfqNewForm(){
         <div class="field"><label>${currentLang==='ar'?'الموعد النهائي':'Deadline'}</label><input required id="nrDeadline" type="date"></div>
       </div>
       <div class="field" id="nrSpecialtyField"><label>${t('field_specialty')}</label><select id="nrSpecialty"></select></div>
+      <div class="field" id="nrOppTypeField"><label>نوع الفرصة</label><select id="nrOppType"></select></div>
+      <div class="field-row" id="nrJobRow1">
+        <div class="field"><label>عدد الوظائف</label><input id="nrQtyStaff" type="number" min="1" value="1"></div>
+        <div class="field"><label>نوع العقد</label><input id="nrContractType" type="text" placeholder="دائم / مؤقت / ساعات"></div>
+      </div>
+      <div class="field-row" id="nrJobRow2">
+        <div class="field"><label>الراتب (نطاق تقريبي)</label><input id="nrSalaryRange" type="text" placeholder="مثال: 8000 - 12000 ريال"></div>
+        <div class="field"><label>ساعات العمل</label><input id="nrWorkHours" type="text" placeholder="مثال: 8 ساعات / دوام جزئي"></div>
+      </div>
+      <div class="field-row" id="nrJobRow3">
+        <div class="field"><label>الجنس المطلوب (اختياري)</label>
+          <select id="nrGenderPref"><option value="">لا يهم</option><option value="ذكر">ذكر</option><option value="أنثى">أنثى</option></select>
+        </div>
+        <div class="field"><label>لغة مطلوبة (اختياري)</label><input id="nrLanguageReq" type="text" placeholder="مثال: إنجليزية"></div>
+      </div>
       <div class="field" id="nrQtyField" style="display:none;"><label>${currentLang==='ar'?'الكمية المطلوبة':'Quantity'}</label><input id="nrQty" type="number" min="1"></div>
       <div class="field"><label>${currentLang==='ar'?'تفاصيل الطلب':'Details'}</label><textarea required id="nrDesc" placeholder="${currentLang==='ar'?'اشرح المواصفات المطلوبة بالتفصيل...':'Describe the requirements...'}"></textarea></div>
       <div class="field"><label>${currentLang==='ar'?'رقم تواصل للتأكد من الطلب':'Verification phone number'}</label><input required id="nrPhone" type="tel" placeholder="05xxxxxxxx"></div>
@@ -1338,11 +1430,18 @@ async function renderRfqNewForm(){
     </form>`;
   fillSelect(document.getElementById('nrCity'), SETTINGS.filters.cities, false);
   fillSelect(document.getElementById('nrSpecialty'), SETTINGS.filters.specialties, false);
+  fillSelect(document.getElementById('nrOppType'), SETTINGS.filters.opportunityTypes, false);
+  toggleRfqTypeFields();
 }
 function toggleRfqTypeFields(){
   const type = document.getElementById('nrType').value;
-  document.getElementById('nrSpecialtyField').style.display = type==='staff'?'block':'none';
-  document.getElementById('nrQtyField').style.display = type==='supply'?'block':'none';
+  const isStaff = type==='staff';
+  document.getElementById('nrSpecialtyField').style.display = isStaff?'block':'none';
+  document.getElementById('nrOppTypeField').style.display = isStaff?'block':'none';
+  document.getElementById('nrJobRow1').style.display = isStaff?'grid':'none';
+  document.getElementById('nrJobRow2').style.display = isStaff?'grid':'none';
+  document.getElementById('nrJobRow3').style.display = isStaff?'grid':'none';
+  document.getElementById('nrQtyField').style.display = isStaff?'none':'block';
 }
 async function submitRfq(e){
   e.preventDefault();
@@ -1354,7 +1453,13 @@ async function submitRfq(e){
     city: document.getElementById('nrCity').value, description: document.getElementById('nrDesc').value.trim(),
     deadline: document.getElementById('nrDeadline').value,
     specialty: type==='staff'? document.getElementById('nrSpecialty').value : null,
-    qty: type==='supply'? Number(document.getElementById('nrQty').value)||1 : null,
+    qty: type==='staff'? Number(document.getElementById('nrQtyStaff').value)||1 : (Number(document.getElementById('nrQty').value)||1),
+    opportunity_type: type==='staff'? document.getElementById('nrOppType').value : null,
+    contract_type: type==='staff'? document.getElementById('nrContractType').value.trim() : null,
+    work_hours: type==='staff'? document.getElementById('nrWorkHours').value.trim() : null,
+    gender_pref: type==='staff'? document.getElementById('nrGenderPref').value : null,
+    language_req: type==='staff'? document.getElementById('nrLanguageReq').value.trim() : null,
+    salary_range: type==='staff'? document.getElementById('nrSalaryRange').value.trim() : null,
     status:'pending_review', phone_verified:false
   };
   const { data: rfq, error } = await sb.from('rfqs').insert(payload).select().single();
@@ -1494,10 +1599,25 @@ async function renderDashStaff(tab, body){
         + (views||[]).map(v=>`<div class="notif-row"><div class="notif-left"><div class="ic">${ICO.eye}</div><div><div style="font-weight:800; font-size:13.5px;">${v.client_org_name||''} ${v.verified?`<span class="badge-verified">${ICO.check} ${t('badge_verified')}</span>`:`<span class="badge-unverified">${t('badge_unverified')}</span>`}</div><div style="font-size:12px; color:var(--ink-faint);">${currentLang==='ar'?'شاهد ملفك الشخصي':'viewed your profile'}</div></div></div><div class="notif-time">${timeAgo(v.created_at)}</div></div>`).join('')
       )) + `</div>`;
   } else if(tab==='opportunities'){
-    const { data: opps } = await sb.from('rfqs').select('*').eq('status','published').eq('type','staff').eq('specialty', u.specialty);
-    body.innerHTML = `<h3 style="margin-bottom:14px;">${currentLang==='ar'?'فرص متاحة في تخصصك':'Opportunities in your specialty'}</h3><div class="rfq-list">` +
-      ((opps&&opps.length)? opps.map(rfqCardHtml).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد فرص مطابقة لتخصصك حاليًا':'No matching opportunities right now'}</div>`) + `</div>`;
+    const { data: opps } = await sb.from('rfqs').select('*').eq('status','published').eq('type','staff');
+    const scored = (opps||[]).map(r=>({ r, score: estimateMatchScore(r, u) })).sort((a,b)=>b.score-a.score);
+    body.innerHTML = `<h3 style="margin-bottom:6px;">${currentLang==='ar'?'فرص متاحة لك':'Opportunities for you'}</h3>
+      <p style="font-size:12px; color:var(--ink-faint); margin-bottom:14px;">${currentLang==='ar'?'نسبة المطابقة تقديرية (تخصص، مدينة، نوع عمل) — مو تقييم ذكاء اصطناعي.':'Match % is a simple estimate (specialty, city, work type) — not an AI evaluation.'}</p>
+      <div class="rfq-list">` +
+      (scored.length? scored.map(({r,score})=>`
+        <div style="position:relative;">
+          <span style="position:absolute; inset-inline-start:14px; top:-10px; z-index:2; background:${score>=70?'var(--green)':score>=40?'var(--amber)':'var(--ink-faint)'}; color:#fff; font-size:11px; font-weight:800; padding:4px 10px; border-radius:99px;">${currentLang==='ar'?'تطابق تقديري':'Est. match'} ${score}%</span>
+          ${rfqCardHtml(r)}
+        </div>`).join('') : `<div class="empty-note">${currentLang==='ar'?'لا توجد فرص منشورة حاليًا':'No published opportunities right now'}</div>`) + `</div>`;
   }
+}
+function estimateMatchScore(rfq, staff){
+  let score = 0;
+  if(rfq.specialty && staff.specialty && rfq.specialty===staff.specialty) score += 55;
+  if(rfq.city && staff.city && rfq.city===staff.city) score += 25;
+  if(rfq.opportunity_type && staff.work_types && staff.work_types.includes(rfq.opportunity_type)) score += 20;
+  if(score===0) score = 10;
+  return Math.min(100, score);
 }
 async function renderDashSupplier(tab, body){
   const u = me.extra;
@@ -1690,8 +1810,12 @@ async function approveApplication(type, applicationId){
   const password = document.getElementById('apvPassword').value.trim();
   const a = window._apvData || {};
   const extra = type==='client'
-    ? { org_name:a.org_name, org_type:a.org_type, city:a.city, branches:a.branches }
-    : { full_name:a.full_name, phone:a.phone, gender:a.gender, specialty:a.specialty, nationality:a.nationality, city:a.city, experience:a.experience, bio:a.bio };
+    ? { org_name:a.org_name, org_type:a.org_type, city:a.city, branches:a.branches, commercial_register:a.commercial_register, license_number:a.license_number }
+    : { full_name:a.full_name, phone:a.phone, gender:a.gender, category:a.category, specialty:a.specialty, sub_specialty:a.sub_specialty, degree:a.degree,
+        nationality:a.nationality, city:a.city, districts:a.districts, national_id:a.national_id, birth_date:a.birth_date,
+        university:a.university, professional_class:a.professional_class, registration_number:a.registration_number, registration_expiry:a.registration_expiry,
+        experience:a.experience, last_employer:a.last_employer, previous_salary:a.previous_salary, expected_salary:a.expected_salary,
+        work_types:a.work_types, bio:a.bio };
   try{
     const { data:{ session } } = await sb.auth.getSession();
     const res = await fetch(`${SUPABASE_URL}/functions/v1/create-account`, {
@@ -1866,6 +1990,24 @@ async function adminAnalytics(body){
     ${(cr||[]).map(r=>`<tr><td>${new Date(r.created_at).toLocaleString('ar-SA')}</td><td>${r.client_org_name||''}</td><td>${r.is_supplier_interest?'اهتمام بفرصة':'طلب رقم كادر'}</td></tr>`).join('') || '<tr><td colspan="3" style="text-align:center; color:var(--ink-faint);">لا يوجد سجل بعد</td></tr>'}
     </tbody></table></div>`;
 }
+function sectionToggleRow(key, label){
+  const vis = (SETTINGS.section_visibility && SETTINGS.section_visibility[key]!==false);
+  return `<div class="settings-item">
+    <span>${label}</span>
+    <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+      <input type="checkbox" ${vis?'checked':''} onchange="toggleSectionVisibility('${key}', this.checked)">
+      <span style="font-size:11.5px; font-weight:800; color:${vis?'var(--green-deep)':'var(--ink-faint)'};">${vis?'ظاهر':'مخفي'}</span>
+    </label>
+  </div>`;
+}
+async function toggleSectionVisibility(key, val){
+  if(!SETTINGS.section_visibility) SETTINGS.section_visibility = {};
+  SETTINGS.section_visibility[key] = val;
+  await sb.from('settings').update({ section_visibility: SETTINGS.section_visibility }).eq('id',1);
+  applySectionVisibility();
+  showToast(val? 'القسم ظاهر الآن بالصفحة الرئيسية' : 'تم إخفاء القسم من الصفحة الرئيسية');
+  adminSettings(document.getElementById('adminBody'));
+}
 async function adminSettings(body){
   const s = SETTINGS;
   const ov = s.stats_override || {};
@@ -1879,6 +2021,18 @@ async function adminSettings(body){
       <h4 style="margin-bottom:12px;">تغيير كلمة مرور الإدارة</h4>
       <div class="field"><label>كلمة المرور الجديدة (٦ أحرف على الأقل)</label><input id="settingsNewPass" type="password" placeholder="••••••••"></div>
       <button class="btn btn-primary btn-sm" onclick="changeAdminPasswordFromSettings()">حفظ كلمة المرور الجديدة</button>
+    </div>
+    <div class="gcard" style="max-width:640px; margin-bottom:18px;">
+      <h4 style="margin-bottom:4px;">إظهار / إخفاء أقسام الصفحة الرئيسية</h4>
+      <p style="font-size:12px; color:var(--ink-faint); margin-bottom:14px;">تحكّم كامل — أي قسم تطفّيه يختفي فورًا من الصفحة الرئيسية للزوار.</p>
+      <div class="settings-list">
+        ${sectionToggleRow('hero','الهيرو الرئيسي (العنوان والخلفية المتحركة)')}
+        ${sectionToggleRow('heroCtas','أزرار الهيرو (استعرض الكوادر / المناقصات / الموردين)')}
+        ${sectionToggleRow('heroStats','إحصائيات الهيرو (الأرقام)')}
+        ${sectionToggleRow('rfqStrip','قسم "مناقصات منشورة الآن"')}
+        ${sectionToggleRow('staffStrip','قسم "تصفح نخبة من الكوادر"')}
+        ${sectionToggleRow('partners','قسم "شركاء النجاح"')}
+      </div>
     </div>
     <div class="gcard" style="max-width:640px; margin-bottom:18px;">
       <h4 style="margin-bottom:12px;">إحصائيات الصفحة الرئيسية</h4>
